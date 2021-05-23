@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./sidebar.scss";
-import "./app.css";
+import "./App.css";
 import Sidebar from "./components/Sidebar";
 
 //const urlServer = "https://tamzirtapoz.herokuapp.com";
