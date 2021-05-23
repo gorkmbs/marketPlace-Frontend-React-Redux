@@ -8,12 +8,12 @@
 }
 
 .rotate90 {
-  transform: rotate(270deg);
+  transform: rotate(360deg);
   transition: 0.5s ease;
   background: rgba(255, 254, 254, 0.705);
 }
 .rotate {
-  transform: rotate(0deg);
+  transform: rotate(90deg);
   transition: 0.5s ease;
   background: transparent;
 }

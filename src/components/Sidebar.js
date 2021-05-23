@@ -77,23 +77,20 @@ const Sidebar = () => {
               </button>
             </div>
 
-            <a
-              href="https://tamzirtapoz.netlify.app"
-              className="linkWithoutBlueLine m-0 p-0"
-            >
-              <div className="p-0 m-0 text-primary">
-                <h1
-                  className="m-0 p-0 pt-4"
-                  style={{
-                    fontSize: "13px",
-                    color: "rgba(219, 43, 125, 1)",
-                  }}
-                >
-                  ™zirt@poz
-                </h1>
-              </div>
-            </a>
-
+            <div className="p-0 m-0 pt-2 text-primary">
+              <a
+                href="https://tamzirtapoz.netlify.app"
+                className="m-0 p-0  linkWithoutBlueLine"
+                style={{
+                  fontSize: "15px",
+                  color: "rgba(219, 43, 125, 1)",
+                  fontWeight: "lighter",
+                  letterSpacing: "0px",
+                }}
+              >
+                ™zirt@poz
+              </a>
+            </div>
             <p>market</p>
           </div>
         </SidebarHeader>
