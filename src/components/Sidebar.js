@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { RiMenuFill } from "react-icons/ri";
 import { IconContext } from "react-icons";
 import sidebarBg from "../assets/bg1.jpg";

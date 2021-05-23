@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./sidebar.scss";
 import "./app.css";
 import Sidebar from "./components/Sidebar";
 
 //const urlServer = "https://tamzirtapoz.herokuapp.com";
-const urlServer = "http://localhost:5000";
+// const urlServer = "http://localhost:5000";
 
 function App() {
   const [windowWidthSize, setWindowWidthSize] = useState(window.innerWidth);
