@@ -17,3 +17,10 @@
   transition: 0.5s ease;
   background: transparent;
 }
+
+.linkWithoutBlueLine:hover {
+  text-decoration: none;
+}
+.linkWithoutBlueLine {
+  text-decoration: none;
+}
