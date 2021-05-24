@@ -22,18 +22,25 @@ import {
 
 const Sidebar = () => {
   const [showSideBar, setShowSideBar] = useState(false);
+  const [toggleSideBar, setToggleSideBar] = useState(true);
 
   const handleOpenSideBar = () => {
     setShowSideBar(!showSideBar);
+  };
+  const handleToggleSideBar = (value) => {
+    setToggleSideBar(value);
   };
 
   return (
     <>
       <ProSidebar
-        className="sidebarPosition"
+        className=""
         collapsed={!showSideBar}
+        toggled={toggleSideBar}
+        onToggle={handleToggleSideBar}
         popperArrow={true}
         image={sidebarBg}
+        breakPoint="md"
       >
         <SidebarHeader>
           <div
