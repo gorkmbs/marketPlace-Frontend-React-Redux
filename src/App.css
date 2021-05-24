@@ -1,12 +1,15 @@
 .backside {
   min-height: 100vh;
-  background: rgba(8, 100, 100, 0.2);
+  background: rgba(189, 211, 211, 0.418);
 }
 
 .sidebarPosition {
-  position: absolute;
+  height: 100vh;
+  background-color: black;
 }
-
+.navTextColor {
+  color: rgba(219, 43, 125, 1);
+}
 .rotate90 {
   transform: rotate(360deg);
   transition: 0.5s ease;

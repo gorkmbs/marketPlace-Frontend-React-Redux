@@ -20,15 +20,15 @@ import {
   FaHeart,
 } from "react-icons/fa";
 
-const Sidebar = () => {
+const Sidebar = ({ toggleSideBar, setToggleSideBar }) => {
   const [showSideBar, setShowSideBar] = useState(false);
-  const [toggleSideBar, setToggleSideBar] = useState(true);
 
   const handleOpenSideBar = () => {
     setShowSideBar(!showSideBar);
   };
   const handleToggleSideBar = (value) => {
     setToggleSideBar(value);
+    setShowSideBar(false);
   };
 
   return (
