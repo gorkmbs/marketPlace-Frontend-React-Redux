@@ -34,7 +34,7 @@ const Sidebar = ({ toggleSideBar, setToggleSideBar }) => {
   return (
     <>
       <ProSidebar
-        className=""
+        className="sidebarPosition"
         collapsed={!showSideBar}
         toggled={toggleSideBar}
         onToggle={handleToggleSideBar}
@@ -69,7 +69,6 @@ const Sidebar = ({ toggleSideBar, setToggleSideBar }) => {
                   textDecoration: "none",
                 }}
               >
-                {" "}
                 <div className="m-0 p-0 d-flex justify-content-center align-items-center">
                   <IconContext.Provider
                     value={{

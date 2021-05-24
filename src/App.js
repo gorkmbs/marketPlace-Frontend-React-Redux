@@ -16,7 +16,7 @@ function App() {
   const [isBigScreen, setIsBigScreen] = useState(false);
   const scrolledPage = () => {
     if (window.innerWidth < 768) {
-      setPageYOffset(30);
+      setPageYOffset(0);
       setIsBigScreen(false);
     } else {
       setPageYOffset(window.pageYOffset);
@@ -26,7 +26,7 @@ function App() {
 
   useEffect(() => {
     if (window.innerWidth < 768) {
-      setPageYOffset(30);
+      setPageYOffset(0);
       setIsBigScreen(false);
     } else {
       setIsBigScreen(true);
@@ -42,7 +42,18 @@ function App() {
   return (
     <>
       <Router>
-        <div className="app">
+        {!isBigScreen ? (
+          <>
+            <NavbarSide
+              setToggleSideBar={setToggleSideBar}
+              isBigScreen={isBigScreen}
+            />
+          </>
+        ) : (
+          <></>
+        )}
+        <div style={{ height: "40px" }}></div>
+        <div className="app bg-dark">
           <div className="m-0 p-0 sidebarPosition">
             <div style={{ height: pageYOffset }}></div>
             <Sidebar
@@ -51,10 +62,17 @@ function App() {
             />
           </div>
           <div className="p-0 backside container-fluid mainBarPosition">
-            <NavbarSide
-              setToggleSideBar={setToggleSideBar}
-              isBigScreen={isBigScreen}
-            />
+            {isBigScreen ? (
+              <>
+                <NavbarSide
+                  setToggleSideBar={setToggleSideBar}
+                  isBigScreen={isBigScreen}
+                />
+              </>
+            ) : (
+              <></>
+            )}
+
             <h1 className="text-left" style={{ zIndex: "1000", color: "red" }}>
               HELLO WORLD FROM TAMZIRTAPOZ MARKET
             </h1>
