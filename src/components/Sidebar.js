@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { RiMenuFill } from "react-icons/ri";
 import { IconContext } from "react-icons";
 import sidebarBg from "../assets/bg1.jpg";
+import { connect } from "react-redux";
+import { TOGGLE_SIDE_BAR } from "../actions/actionsForSite";
 import {
   ProSidebar,
   Menu,
@@ -20,7 +22,7 @@ import {
   FaHeart,
 } from "react-icons/fa";
 
-const Sidebar = ({ toggleSideBar, setToggleSideBar }) => {
+const Sidebar = ({ toggleSideBar, setToggleSideBar, isBigScreen }) => {
   const [showSideBar, setShowSideBar] = useState(false);
 
   const handleOpenSideBar = () => {
@@ -35,10 +37,18 @@ const Sidebar = ({ toggleSideBar, setToggleSideBar }) => {
     <>
       <ProSidebar
         className="sidebarPosition"
+        style={{
+          maxHeight: "90vh",
+          height: "550px",
+          marginTop: isBigScreen
+            ? "0"
+            : window.innerHeight > 800
+            ? "50px"
+            : "0px",
+        }}
         collapsed={!showSideBar}
         toggled={toggleSideBar}
         onToggle={handleToggleSideBar}
-        popperArrow={true}
         image={sidebarBg}
         breakPoint="md"
       >
@@ -170,4 +180,15 @@ const Sidebar = ({ toggleSideBar, setToggleSideBar }) => {
   );
 };
 
-export default Sidebar;
+const mapStateToProps = (store) => {
+  const { toggleSideBar, isBigScreen } = store.site;
+  return { toggleSideBar, isBigScreen };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setToggleSideBar: () => dispatch({ type: TOGGLE_SIDE_BAR }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);
