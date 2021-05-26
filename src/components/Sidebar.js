@@ -164,14 +164,18 @@ const Sidebar = ({ toggleSideBar, setToggleSideBar, isBigScreen }) => {
               padding: "20px 24px",
             }}
           >
+            <FaGithub />
             <a
-              href="https://github.com/azouaoui-med/react-pro-sidebar"
-              target="_blank"
-              className="sidebar-btn"
-              rel="noopener noreferrer"
+              href="https://tamzirtapoz.netlify.app"
+              className="m-0 p-0  linkWithoutBlueLine"
+              style={{
+                fontSize: "15px",
+                color: "rgba(219, 43, 125, 1)",
+                fontWeight: "lighter",
+                letterSpacing: "0px",
+              }}
             >
-              <FaGithub />
-              <span>asd</span>
+              <p style={{ transform: "translate(-22px, 0px)" }}>™zirt@poz</p>
             </a>
           </div>
         </SidebarFooter>
