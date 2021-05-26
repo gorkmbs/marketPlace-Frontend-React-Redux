@@ -42,7 +42,7 @@ const Sidebar = ({ toggleSideBar, setToggleSideBar, isBigScreen }) => {
           height: "550px",
           marginTop: isBigScreen
             ? "0"
-            : window.innerHeight > 800
+            : window.innerHeight > 700
             ? "50px"
             : "0px",
         }}
