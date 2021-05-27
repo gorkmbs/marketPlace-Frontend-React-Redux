@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./sidebar.scss";
 import "./App.css";
@@ -10,9 +10,7 @@ import reducerForSite from "./recucers/reducerForSite";
 import reducerForBag from "./recucers/reducerForBag";
 import { BIG_SCREEN_STATUS_CHANGE } from "./actions/actionsForSite";
 import { Provider } from "react-redux";
-
-//const urlServer = "https://tamzirtapoz.herokuapp.com";
-// const urlServer = "http://localhost:5000";
+import Authorization from "./components/Authorization";
 
 const rootReducer = combineReducers({
   site: reducerForSite,
@@ -89,102 +87,15 @@ function App() {
                 <></>
               )}
 
-              <h1
-                className="text-left"
-                style={{ zIndex: "1000", color: "red" }}
-              >
-                HELLO WORLD FROM TAMZIRTAPOZ MARKET
-              </h1>
-              <h1
-                className="text-left"
-                style={{ zIndex: "1000", color: "blue" }}
-              >
-                I AM PREPARING THIS PAGE
-              </h1>
-              <h1
-                className="text-left"
-                style={{ zIndex: "1000", color: "black" }}
-              >
-                REDUX ACTIVE
-              </h1>
-              <h1
-                className="text-left"
-                style={{ zIndex: "1000", color: "black" }}
-              >
-                IN CLOSE TIME YOU CAN ENTER THE MARKET
-              </h1>
-              <h1
-                className="text-left"
-                style={{ zIndex: "1000", color: "black" }}
-              >
-                IN CLOSE TIME YOU CAN ENTER THE MARKET
-              </h1>
-              <h1
-                className="text-left"
-                style={{ zIndex: "1000", color: "black" }}
-              >
-                IN CLOSE TIME YOU CAN ENTER THE MARKET
-              </h1>
-              <h1
-                className="text-left"
-                style={{ zIndex: "1000", color: "black" }}
-              >
-                IN CLOSE TIME YOU CAN ENTER THE MARKET
-              </h1>
-              <h1
-                className="text-left"
-                style={{ zIndex: "1000", color: "black" }}
-              >
-                IN CLOSE TIME YOU CAN ENTER THE MARKET
-              </h1>
-              <h1
-                className="text-left"
-                style={{ zIndex: "1000", color: "black" }}
-              >
-                IN CLOSE TIME YOU CAN ENTER THE MARKET
-              </h1>
-              <h1
-                className="text-left"
-                style={{ zIndex: "1000", color: "black" }}
-              >
-                IN CLOSE TIME YOU CAN ENTER THE MARKET
-              </h1>
-              <h1
-                className="text-left"
-                style={{ zIndex: "1000", color: "black" }}
-              >
-                IN CLOSE TIME YOU CAN ENTER THE MARKET
-              </h1>
-              <h1
-                className="text-left"
-                style={{ zIndex: "1000", color: "black" }}
-              >
-                IN CLOSE TIME YOU CAN ENTER THE MARKET
-              </h1>
-              <h1
-                className="text-left"
-                style={{ zIndex: "1000", color: "black" }}
-              >
-                IN CLOSE TIME YOU CAN ENTER THE MARKET
-              </h1>
-              <h1
-                className="text-left"
-                style={{ zIndex: "1000", color: "black" }}
-              >
-                IN CLOSE TIME YOU CAN ENTER THE MARKET
-              </h1>
-              <h1
-                className="text-left"
-                style={{ zIndex: "1000", color: "black" }}
-              >
-                IN CLOSE TIME YOU CAN ENTER THE MARKET
-              </h1>
-              <h1
-                className="text-left"
-                style={{ zIndex: "1000", color: "black" }}
-              >
-                IN CLOSE TIME YOU CAN ENTER THE MARKET
-              </h1>
+              <div className="container-fluid m-0 p-0">
+                <Switch>
+                  <Route>
+                    <Route path="/authorization/:id">
+                      <Authorization />
+                    </Route>
+                  </Route>
+                </Switch>
+              </div>
             </div>
           </div>
         </Router>

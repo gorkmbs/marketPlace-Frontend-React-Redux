@@ -22,7 +22,12 @@ import {
   FaHeart,
 } from "react-icons/fa";
 
-const Sidebar = ({ toggleSideBar, setToggleSideBar, isBigScreen }) => {
+const Sidebar = ({
+  toggleSideBar,
+  setToggleSideBar,
+  isBigScreen,
+  tamzirtapozServer,
+}) => {
   const [showSideBar, setShowSideBar] = useState(false);
 
   const handleOpenSideBar = () => {
@@ -95,7 +100,7 @@ const Sidebar = ({ toggleSideBar, setToggleSideBar, isBigScreen }) => {
 
             <div className="p-0 m-0 pt-2 text-primary">
               <a
-                href="https://tamzirtapoz.netlify.app"
+                href={tamzirtapozServer}
                 className="m-0 p-0  linkWithoutBlueLine"
                 style={{
                   fontSize: "15px",
@@ -166,7 +171,7 @@ const Sidebar = ({ toggleSideBar, setToggleSideBar, isBigScreen }) => {
           >
             <FaGithub />
             <a
-              href="https://tamzirtapoz.netlify.app"
+              href={tamzirtapozServer}
               className="m-0 p-0  linkWithoutBlueLine"
               style={{
                 fontSize: "15px",
@@ -185,8 +190,8 @@ const Sidebar = ({ toggleSideBar, setToggleSideBar, isBigScreen }) => {
 };
 
 const mapStateToProps = (store) => {
-  const { toggleSideBar, isBigScreen } = store.site;
-  return { toggleSideBar, isBigScreen };
+  const { toggleSideBar, isBigScreen, tamzirtapozServer } = store.site;
+  return { toggleSideBar, isBigScreen, tamzirtapozServer };
 };
 
 const mapDispatchToProps = (dispatch) => {
