@@ -188,7 +188,7 @@ const NavbarSide = ({
             ) : (
               <>
                 <button
-                  className="btn btn-success m-0 p-0"
+                  className="btn btn-success m-0 p-1"
                   onClick={() => {
                     window.location = tamzirtapozServer + "/login";
                   }}
