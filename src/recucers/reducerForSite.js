@@ -6,9 +6,9 @@ import {
   USERNAME_CHANGED,
 } from "../actions/actionsForSite";
 
-// const urlServer = "http://localhost:5000";
+const urlServer = "http://localhost:5000";
 // const tamzirtapozServer = "http://localhost:3000";
-const urlServer = "https://tamzirtapoz.herokuapp.com";
+// const urlServer = "https://tamzirtapoz.herokuapp.com";
 const tamzirtapozServer = "https://tamzirtapoz.netlify.app";
 
 const initialSiteStore = {
