@@ -8,17 +8,21 @@ import {
   LOGIN_STATUS_CHANGED,
   TOKEN_CHANGED,
   USERNAME_CHANGED,
+  USER_ID_CHANGED,
+  USER_COLOR_CHANGED,
 } from "../actions/actionsForSite";
 
 const axios = require("axios");
-// const Cookie = require("js-cookie");
+const Cookie = require("js-cookie");
 
 const Authorization = ({
   login,
   setLogin,
   setToken,
   setUsername,
+  setColor,
   urlServer,
+  setId,
 }) => {
   const [redirectTime, setRedirectTime] = useState(false);
   const [successFalse, setSuccessFalse] = useState(false);
@@ -34,6 +38,18 @@ const Authorization = ({
           if (response.data.success === true) {
             setLogin(response.data.success);
             setToken(response.data.token);
+            setId(response.data.id);
+            setColor(response.data.color);
+            Cookie.set("Info", response.data.username, {
+              expires: 2,
+              sameSite: "Lax",
+              secure: true,
+            });
+            Cookie.set("Authorization", response.data.token, {
+              expires: 2,
+              sameSite: "Lax",
+              secure: true,
+            });
             setUsername(response.data.username);
             setRedirectTime(true);
           } else {
@@ -89,6 +105,9 @@ const mapDispatchToProps = (dispatch) => {
     setToken: (token) => dispatch({ type: TOKEN_CHANGED, payload: { token } }),
     setUsername: (username) =>
       dispatch({ type: USERNAME_CHANGED, payload: { username } }),
+    setId: (id) => dispatch({ type: USER_ID_CHANGED, payload: { id } }),
+    setColor: (color) =>
+      dispatch({ type: USER_COLOR_CHANGED, payload: { color } }),
   };
 };
 

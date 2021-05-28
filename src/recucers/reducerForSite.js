@@ -4,6 +4,8 @@ import {
   LOGIN_STATUS_CHANGED,
   TOKEN_CHANGED,
   USERNAME_CHANGED,
+  USER_ID_CHANGED,
+  USER_COLOR_CHANGED,
 } from "../actions/actionsForSite";
 
 // const urlServer = "http://localhost:5000";
@@ -16,6 +18,8 @@ const initialSiteStore = {
   login: false,
   token: "",
   username: "",
+  id: "",
+  color: "",
   isBigScreen: false,
   urlServer,
   tamzirtapozServer,
@@ -23,6 +27,12 @@ const initialSiteStore = {
 function reducerForSite(state = initialSiteStore, action) {
   if (action.type === TOGGLE_SIDE_BAR) {
     return { ...state, toggleSideBar: !state.toggleSideBar };
+  }
+  if (action.type === USER_COLOR_CHANGED) {
+    return { ...state, color: action.payload.color };
+  }
+  if (action.type === USER_ID_CHANGED) {
+    return { ...state, id: action.payload.id };
   }
   if (action.type === TOGGLE_SIDE_BAR) {
     return { ...state, toggleSideBar: !state.toggleSideBar };
