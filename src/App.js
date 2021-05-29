@@ -90,7 +90,7 @@ function App() {
                 <></>
               )}
 
-              <div className="container-fluid m-0 p-0">
+              <div className="container-fluid m-0 p-0 pt-1">
                 <Switch>
                   <Route exact path="/">
                     <HomeGeneral />
@@ -115,9 +115,7 @@ function App() {
         >
           <Modal.Header className="bg-success">
             <Modal.Title>
-              <span className="text-light">
-                Welcome to tamzirtapoz Market {":)"}
-              </span>
+              <span className="text-light">Welcome to Market {":)"}</span>
             </Modal.Title>
             <button
               className="btn btn-success m-0 p-0"
