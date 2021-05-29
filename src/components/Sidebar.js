@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { RiMenuFill } from "react-icons/ri";
 import { IconContext } from "react-icons";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 import sidebarBg from "../assets/bg1.jpg";
+import { GiMeal, GiClothes } from "react-icons/gi";
+import { MdComputer, MdPets } from "react-icons/md";
 import { connect } from "react-redux";
 import { TOGGLE_SIDE_BAR } from "../actions/actionsForSite";
 import {
@@ -13,14 +16,7 @@ import {
   SidebarFooter,
   SidebarContent,
 } from "react-pro-sidebar";
-import {
-  FaTachometerAlt,
-  FaGem,
-  FaList,
-  FaGithub,
-  FaRegLaughWink,
-  FaHeart,
-} from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
 
 const Sidebar = ({
   toggleSideBar,
@@ -40,6 +36,37 @@ const Sidebar = ({
 
   return (
     <>
+      {showSideBar && isBigScreen ? (
+        <>
+          <button
+            className="btn btn-danger"
+            onClick={() => setShowSideBar(false)}
+            style={{
+              position: "absolute",
+              zIndex: "1500",
+              transform: "translate(200px,25px)",
+              marginTop: isBigScreen
+                ? "0"
+                : window.innerHeight > 700
+                ? "50px"
+                : "0px",
+            }}
+          >
+            <IconContext.Provider
+              value={{
+                color: "white",
+                className: "global-class-name m-0 p-0",
+                size: "1.5em",
+              }}
+            >
+              <AiOutlineCloseCircle />
+            </IconContext.Provider>
+          </button>
+        </>
+      ) : (
+        <></>
+      )}
+
       <ProSidebar
         className="sidebarPosition"
         style={{
@@ -119,45 +146,70 @@ const Sidebar = ({
         <SidebarContent>
           <Menu iconShape="circle">
             <MenuItem
-              icon={<FaTachometerAlt />}
-              suffix={<span className="badge red">asd</span>}
+              icon={
+                <IconContext.Provider
+                  value={{
+                    className: "global-class-name m-0 p-0",
+                    size: "2em",
+                  }}
+                >
+                  <GiMeal />
+                </IconContext.Provider>
+              }
+              suffix={<span className="badge red">Fast</span>}
             >
-              asd
+              Food
             </MenuItem>
-            <MenuItem icon={<FaGem />}> asd</MenuItem>
-          </Menu>
-          <Menu iconShape="circle">
-            <SubMenu
-              suffix={<span className="badge yellow">3</span>}
-              title="asd"
-              icon={<FaRegLaughWink />}
+            <MenuItem
+              suffix={<span className="badge yellow">50%</span>}
+              icon={
+                <IconContext.Provider
+                  value={{
+                    className: "global-class-name m-0 p-0",
+                    size: "2em",
+                  }}
+                >
+                  <GiClothes />
+                </IconContext.Provider>
+              }
             >
-              <MenuItem> 1</MenuItem>
-              <MenuItem> 2</MenuItem>
-              <MenuItem> 3</MenuItem>
+              Wearing
+            </MenuItem>
+            <SubMenu
+              prefix={<span className="badge gray">New</span>}
+              title="Technology"
+              icon={
+                <IconContext.Provider
+                  value={{
+                    className: "global-class-name m-0 p-0",
+                    size: "2em",
+                  }}
+                >
+                  <MdComputer />
+                </IconContext.Provider>
+              }
+            >
+              <MenuItem>Computers</MenuItem>
+              <MenuItem>Mobile Phones</MenuItem>
+              <MenuItem>Gaming</MenuItem>
             </SubMenu>
             <SubMenu
-              prefix={<span className="badge gray">3</span>}
-              title="asd"
-              icon={<FaHeart />}
+              title="Pet"
+              icon={
+                <IconContext.Provider
+                  value={{
+                    className: "global-class-name m-0 p-0",
+                    size: "2em",
+                  }}
+                >
+                  <MdPets />
+                </IconContext.Provider>
+              }
             >
-              header
-              <MenuItem> 1</MenuItem>
-              <MenuItem> 2</MenuItem>
-              <MenuItem> 3</MenuItem>
-            </SubMenu>
-            <SubMenu title="asd" icon={<FaList />}>
-              <MenuItem>1 </MenuItem>
-              <MenuItem> 2 </MenuItem>
-              <SubMenu title="asd">
-                <MenuItem>3.1 </MenuItem>
-                <MenuItem>3.2 </MenuItem>
-                <SubMenu title="asd">
-                  <MenuItem>3.3.1 </MenuItem>
-                  <MenuItem>3.3.2 </MenuItem>
-                  <MenuItem>3.3.3 </MenuItem>
-                </SubMenu>
-              </SubMenu>
+              <MenuItem>Cats</MenuItem>
+              <MenuItem>Dogs</MenuItem>
+              <MenuItem>Birds</MenuItem>
+              <MenuItem>Fish</MenuItem>
             </SubMenu>
           </Menu>
         </SidebarContent>

@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Carousel } from "react-bootstrap";
+import { connect } from "react-redux";
+import brands from "../assets/brands.jpg";
+import discount from "../assets/discount.jpg";
 // import { FcNext, FcPrevious } from "react-icons/fc";
 
 // import { IconContext } from "react-icons";
 
 import { homeScreenItems } from "../arrayFiles/homeScreenItems";
 
-const HomeGeneral = () => {
+const HomeGeneral = ({ isBigScreen }) => {
   const [indexForSlide, setIndexForSlide] = useState(0);
 
   const handleSelect = (selectedIndex, e) => {
@@ -20,11 +23,25 @@ const HomeGeneral = () => {
           className="d-flex justify-content-center"
           style={{ background: "rgba(0,250,0,0.1)" }}
         >
+          {isBigScreen ? (
+            <>
+              <div className="d-flex m-0 p-0">
+                <img
+                  src={brands}
+                  alt="brands"
+                  className="img img-fluid rounded"
+                />
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
+
           <div
             className="container-fluid m-0 p-0 homeSlideItems border border-secondary"
             style={{
-              borderRadius: "10px",
-              maxWidth: "500px",
+              borderRadius: "15px",
+              maxWidth: "600px",
               width: "90vw",
 
               background: "rgba(50,50,150,0.2)",
@@ -113,10 +130,38 @@ const HomeGeneral = () => {
               })}
             </div>
           </div>
+          {isBigScreen ? (
+            <>
+              <div className="d-flex justify-content-center m-0  p-0">
+                <img
+                  src={discount}
+                  alt="discount"
+                  className="img img-fluid rounded border border-danger"
+                />
+                <p
+                  className="discountFlicker"
+                  style={{
+                    position: "absolute",
+                    zIndex: "150",
+                    fontSize: "5vw",
+                  }}
+                >
+                  up to 50%
+                </p>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </>
   );
 };
 
-export default HomeGeneral;
+const mapStateToProps = (state) => {
+  const { isBigScreen } = state.site;
+  return { isBigScreen };
+};
+
+export default connect(mapStateToProps)(HomeGeneral);

@@ -1,6 +1,6 @@
 .backside {
   min-height: 100vh;
-  background: rgb(189, 211, 211);
+  background: rgb(255, 255, 255);
 }
 
 .sidebarPosition {
@@ -40,6 +40,27 @@
   }
   100% {
     transform: rotate(720deg);
+  }
+}
+
+.discountFlicker {
+  margin-top: 15px;
+  animation: discountFlickerk 5s linear 0s infinite;
+}
+
+@keyframes discountFlickerk {
+  0% {
+    background: red;
+    color: black;
+  }
+
+  50% {
+    background: transparent;
+    color: red;
+  }
+  100% {
+    background: red;
+    color: black;
   }
 }
 
