@@ -10,6 +10,7 @@ import {
   LOGIN_STATUS_CHANGED,
   TOKEN_CHANGED,
   USERNAME_CHANGED,
+  ADMIN_STATUS_CHANGED,
   USER_COLOR_CHANGED,
   USER_ID_CHANGED,
 } from "../actions/actionsForSite";
@@ -21,10 +22,12 @@ const NavbarSide = ({
   setToggleSideBar,
   isBigScreen,
   login,
+  setAdmin,
   username,
   id,
   setId,
   tamzirtapozServer,
+  admin,
   setLogin,
   color,
   urlServer,
@@ -54,6 +57,7 @@ const NavbarSide = ({
           setToken(response.data.token);
           setColor(response.data.color);
           setId(response.data.id);
+          setAdmin(response.data.admin);
           // setId(response.data.id);
           // setColor(response.data.color);
           // setAdmin(response.data.admin);
@@ -80,7 +84,7 @@ const NavbarSide = ({
 
   return (
     <>
-      <nav className="navbar navbar-expand d-flex justify-content-between sticky-top fixed-top NavbarPosition p-0 m-0 align-top ">
+      <nav className="navbar navbar-expand d-flex flex-wrap justify-content-between sticky-top fixed-top NavbarPosition p-0 m-0 align-top ">
         {isBigScreen ? (
           <></>
         ) : (
@@ -155,13 +159,30 @@ const NavbarSide = ({
                     </Dropdown.Item>
 
                     <Dropdown.Item eventKey="2">
-                      <Link to={`/users/other`} className="linkWithoutBlueLine">
+                      <Link
+                        to={`/add-new-product`}
+                        className="linkWithoutBlueLine"
+                      >
                         <div className="bg-dark p-0 m-0 d-flex justify-content-center">
-                          Other Users
+                          Sell Product
                         </div>
                       </Link>
                     </Dropdown.Item>
-                    <Dropdown.Item eventKey="3">
+                    {admin ? (
+                      <Dropdown.Item eventKey="3">
+                        <Link
+                          to={`/add-new-category`}
+                          className="linkWithoutBlueLine"
+                        >
+                          <div className="bg-dark p-0 m-0 d-flex justify-content-center">
+                            Add Category (Admin)
+                          </div>
+                        </Link>
+                      </Dropdown.Item>
+                    ) : (
+                      <></>
+                    )}
+                    <Dropdown.Item eventKey="4">
                       <Link to={`/lottery`} className="linkWithoutBlueLine">
                         <div className="bg-dark p-0 m-0 d-flex justify-content-center">
                           Lottery
@@ -240,12 +261,14 @@ const mapStateToProps = (store) => {
     login,
     username,
     urlServer,
+    admin,
     id,
     color,
   } = store.site;
   return {
     isBigScreen,
     toggleSideBar,
+    admin,
     tamzirtapozServer,
     login,
     username,
@@ -266,6 +289,8 @@ const mapDispatchToProps = (dispatch) => {
     setColor: (color) =>
       dispatch({ type: USER_COLOR_CHANGED, payload: { color } }),
     setId: (id) => dispatch({ type: USER_ID_CHANGED, payload: { id } }),
+    setAdmin: (admin) =>
+      dispatch({ type: ADMIN_STATUS_CHANGED, payload: { admin } }),
   };
 };
 

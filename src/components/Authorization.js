@@ -9,6 +9,7 @@ import {
   TOKEN_CHANGED,
   USERNAME_CHANGED,
   USER_ID_CHANGED,
+  ADMIN_STATUS_CHANGED,
   USER_COLOR_CHANGED,
 } from "../actions/actionsForSite";
 
@@ -21,6 +22,7 @@ const Authorization = ({
   setToken,
   setUsername,
   setColor,
+  setAdmin,
   urlServer,
   setId,
 }) => {
@@ -32,7 +34,7 @@ const Authorization = ({
     if (!login) {
       axios({
         method: "get",
-        url: urlServer + "/users//market_confirmation/" + id,
+        url: urlServer + "/users/market_confirmation/" + id,
       })
         .then((response) => {
           if (response.data.success === true) {
@@ -40,6 +42,7 @@ const Authorization = ({
             setToken(response.data.token);
             setId(response.data.id);
             setColor(response.data.color);
+            setAdmin(response.data.admin);
             Cookie.set("Info", response.data.username, {
               expires: 2,
               sameSite: "Lax",
@@ -108,6 +111,8 @@ const mapDispatchToProps = (dispatch) => {
     setId: (id) => dispatch({ type: USER_ID_CHANGED, payload: { id } }),
     setColor: (color) =>
       dispatch({ type: USER_COLOR_CHANGED, payload: { color } }),
+    setAdmin: (admin) =>
+      dispatch({ type: ADMIN_STATUS_CHANGED, payload: { admin } }),
   };
 };
 

@@ -7,6 +7,15 @@
   background-color: black;
 }
 
+.homeTab {
+  background: linear-gradient(180deg, rgb(76, 183, 63), rgb(255, 255, 255));
+}
+
+.addProductBackground {
+  /* background: linear-gradient(30deg, rgb(63, 191, 241), rgb(105, 240, 233)); */
+  background: linear-gradient(210deg, rgb(0, 255, 106), rgb(105, 240, 233));
+}
+
 .NavbarPosition {
   color: white;
   position: fixed;
@@ -44,7 +53,7 @@
 }
 
 .discountFlicker {
-  margin-top: 15px;
+  margin-top: 10px;
   animation: discountFlickerk 5s linear 0s infinite;
 }
 

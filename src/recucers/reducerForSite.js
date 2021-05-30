@@ -6,6 +6,8 @@ import {
   USERNAME_CHANGED,
   USER_ID_CHANGED,
   USER_COLOR_CHANGED,
+  ADMIN_STATUS_CHANGED,
+  SCREEN_WIDTH_CHANGED,
 } from "../actions/actionsForSite";
 
 // const urlServer = "http://localhost:5000";
@@ -18,9 +20,11 @@ const initialSiteStore = {
   login: false,
   token: "",
   username: "",
+  admin: false,
   id: "",
   color: "",
   isBigScreen: false,
+  screenWidth: 500,
   urlServer,
   tamzirtapozServer,
 };
@@ -31,8 +35,14 @@ function reducerForSite(state = initialSiteStore, action) {
   if (action.type === USER_COLOR_CHANGED) {
     return { ...state, color: action.payload.color };
   }
+  if (action.type === ADMIN_STATUS_CHANGED) {
+    return { ...state, admin: action.payload.admin };
+  }
   if (action.type === USER_ID_CHANGED) {
     return { ...state, id: action.payload.id };
+  }
+  if (action.type === SCREEN_WIDTH_CHANGED) {
+    return { ...state, screenWidth: action.payload.width };
   }
   if (action.type === TOGGLE_SIDE_BAR) {
     return { ...state, toggleSideBar: !state.toggleSideBar };

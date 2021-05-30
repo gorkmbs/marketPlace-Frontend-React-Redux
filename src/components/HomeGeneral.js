@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Carousel } from "react-bootstrap";
 import { connect } from "react-redux";
 import brands from "../assets/brands.jpg";
@@ -11,6 +11,21 @@ import { homeScreenItems } from "../arrayFiles/homeScreenItems";
 
 const HomeGeneral = ({ isBigScreen }) => {
   const [indexForSlide, setIndexForSlide] = useState(0);
+  const [smallerPage, setSmallerPage] = useState(true);
+  const pageSizeChanged = () => {
+    if (window.innerWidth < 930) {
+      setSmallerPage(true);
+    } else {
+      setSmallerPage(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", pageSizeChanged);
+    return () => {
+      window.removeEventListener("resize", pageSizeChanged);
+    };
+  });
 
   const handleSelect = (selectedIndex, e) => {
     setIndexForSlide(selectedIndex);
@@ -19,18 +34,46 @@ const HomeGeneral = ({ isBigScreen }) => {
   return (
     <>
       <div className="container-fluid m-0 p-0">
-        <div
-          className="d-flex justify-content-center"
-          style={{ background: "rgba(0,250,0,0.1)" }}
-        >
+        <div className="d-flex flex-row flex-wrap justify-content-around align-items-center homeTab">
           {isBigScreen ? (
             <>
-              <div className="d-flex m-0 p-0">
+              <div
+                className={`d-flex justify-content-around align-self-center flex-${
+                  smallerPage ? "row" : "column"
+                } m-0 p-0`}
+              >
                 <img
                   src={brands}
                   alt="brands"
                   className="img img-fluid rounded"
+                  style={{
+                    maxWidth: "250px",
+
+                    boxShadow: "10px 10px 5px rgba(55, 50, 50, 0.3)",
+                  }}
                 />
+                <div style={{ width: "0px", height: "25px" }}></div>
+                <div className="d-flex justify-content-center m-0 p-0">
+                  <img
+                    src={discount}
+                    alt="discount"
+                    className="img img-fluid rounded border border-danger"
+                    style={{
+                      maxWidth: "250px",
+                      boxShadow: "10px 10px 5px rgba(55, 50, 50, 0.3)",
+                    }}
+                  />
+                  <p
+                    className="discountFlicker"
+                    style={{
+                      position: "absolute",
+                      zIndex: "150",
+                      fontSize: "30px",
+                    }}
+                  >
+                    up to 50%
+                  </p>
+                </div>
               </div>
             </>
           ) : (
@@ -38,7 +81,7 @@ const HomeGeneral = ({ isBigScreen }) => {
           )}
 
           <div
-            className="container-fluid m-0 p-0 homeSlideItems border border-secondary"
+            className="container-fluid m-0  p-1 homeSlideItems border border-secondary"
             style={{
               borderRadius: "15px",
               maxWidth: "600px",
@@ -98,7 +141,7 @@ const HomeGeneral = ({ isBigScreen }) => {
                 );
               })}
             </Carousel>
-            <div className="d-flex justify-content-center m-1 p-1">
+            <div className="d-flex justify-content-center flex-wrap m-1 p-1">
               {homeScreenItems.map((item) => {
                 return (
                   <button
@@ -130,29 +173,6 @@ const HomeGeneral = ({ isBigScreen }) => {
               })}
             </div>
           </div>
-          {isBigScreen ? (
-            <>
-              <div className="d-flex justify-content-center m-0  p-0">
-                <img
-                  src={discount}
-                  alt="discount"
-                  className="img img-fluid rounded border border-danger"
-                />
-                <p
-                  className="discountFlicker"
-                  style={{
-                    position: "absolute",
-                    zIndex: "150",
-                    fontSize: "5vw",
-                  }}
-                >
-                  up to 50%
-                </p>
-              </div>
-            </>
-          ) : (
-            <></>
-          )}
         </div>
       </div>
     </>

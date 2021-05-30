@@ -9,10 +9,15 @@ import { createStore, combineReducers } from "redux";
 import NavbarSide from "./components/NavbarSide";
 import reducerForSite from "./recucers/reducerForSite";
 import reducerForBag from "./recucers/reducerForBag";
-import { BIG_SCREEN_STATUS_CHANGE } from "./actions/actionsForSite";
+import {
+  BIG_SCREEN_STATUS_CHANGE,
+  SCREEN_WIDTH_CHANGED,
+} from "./actions/actionsForSite";
 import { Provider } from "react-redux";
 import Authorization from "./components/Authorization";
 import HomeGeneral from "./components/HomeGeneral";
+import AddProduct from "./components/AddProduct";
+import AddCategory from "./components/AddCategory";
 
 const rootReducer = combineReducers({
   site: reducerForSite,
@@ -25,6 +30,10 @@ function App() {
   const [welcomeMessage, setWelcomeMessage] = useState(true);
 
   const scrolledPage = () => {
+    store.dispatch({
+      type: SCREEN_WIDTH_CHANGED,
+      payload: { width: window.innerWidth },
+    });
     if (window.innerWidth <= 768) {
       setPageYOffset(0);
 
@@ -43,6 +52,10 @@ function App() {
   };
 
   useEffect(() => {
+    store.dispatch({
+      type: SCREEN_WIDTH_CHANGED,
+      payload: { width: window.innerWidth },
+    });
     if (window.innerWidth <= 768) {
       setPageYOffset(0);
 
@@ -94,6 +107,12 @@ function App() {
                 <Switch>
                   <Route exact path="/">
                     <HomeGeneral />
+                  </Route>
+                  <Route path="/add-new-product">
+                    <AddProduct />
+                  </Route>
+                  <Route path="/add-new-category">
+                    <AddCategory />
                   </Route>
                   <Route path="/authorization/:id">
                     <Authorization />
