@@ -75,31 +75,44 @@ const NavbarSide = ({
         .then(function (response) {
           // console.log(response.data);
           // handle success
-          setLogin(response.data.success);
-          setUsername(response.data.username);
-          setToken(response.data.token);
-          setColor(response.data.color);
-          setId(response.data.id);
-          setAdmin(response.data.admin);
-          // setId(response.data.id);
-          // setColor(response.data.color);
-          // setAdmin(response.data.admin);
-          Cookie.set("Info", response.data.username, {
-            expires: 2,
-            sameSite: "Lax",
-            secure: true,
-          });
-          Cookie.set("Authorization", response.data.token, {
-            expires: 2,
-            sameSite: "Lax",
-            secure: true,
-          });
+
+          if (response.data.success === true) {
+            setLogin(response.data.success);
+            setUsername(response.data.username);
+            setToken(response.data.token);
+            setColor(response.data.color);
+            setId(response.data.id);
+            setAdmin(response.data.admin);
+            // setId(response.data.id);
+            // setColor(response.data.color);
+            // setAdmin(response.data.admin);
+            Cookie.set("Info", response.data.username, {
+              expires: 2,
+              sameSite: "Lax",
+              secure: true,
+            });
+            Cookie.set("Authorization", response.data.token, {
+              expires: 2,
+              sameSite: "Lax",
+              secure: true,
+            });
+          } else {
+            Cookie.remove("Info");
+            Cookie.remove("Authorization");
+          }
         })
         .catch(function (error) {
           // handle error
           // setServerSideError(true);
           console.log(error);
         });
+
+      setTimeout(() => {
+        if (!login) {
+          Cookie.remove("Info");
+          Cookie.remove("Authorization");
+        }
+      }, 5000);
     }
     return () => {};
     // eslint-disable-next-line
