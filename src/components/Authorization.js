@@ -73,7 +73,14 @@ const Authorization = ({
   return (
     <>
       {redirectTime ? <Redirect to="/" /> : <></>}
-      {successFalse ? <>a problem occured please try again later</> : <></>}
+      {successFalse ? (
+        <>
+          a problem occured please try again later. Close all tabs and
+          reconnect. If problem still continues, contact with admins
+        </>
+      ) : (
+        <></>
+      )}
       <article>
         <div style={{ height: "30vh" }}></div>
         <div className="d-flex justify-content-center">

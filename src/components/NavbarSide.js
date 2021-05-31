@@ -30,12 +30,35 @@ const NavbarSide = ({
   admin,
   setLogin,
   color,
+  token,
   urlServer,
   setColor,
   setToken,
   setUsername,
 }) => {
-  const logOut = () => {};
+  const logOut = () => {
+    Cookie.remove("Authorization");
+    Cookie.remove("Info");
+    axios({
+      method: "get",
+      url: urlServer + "/users/log-out",
+      headers: { Authorization: token },
+    })
+      .then((response) => {
+        if (response.data.success === true) {
+          setLogin(false);
+          setUsername("");
+          setToken("");
+          setColor("");
+          setId("");
+          setAdmin("");
+          window.location = tamzirtapozServer + "/goodbye";
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   useEffect(() => {
     if (
       !login &&
@@ -209,7 +232,7 @@ const NavbarSide = ({
             ) : (
               <>
                 <button
-                  className="btn btn-success m-0 p-1"
+                  className="btn btn-success m-0 p-2"
                   onClick={() => {
                     window.location = tamzirtapozServer + "/login";
                   }}
@@ -261,6 +284,7 @@ const mapStateToProps = (store) => {
     login,
     username,
     urlServer,
+    token,
     admin,
     id,
     color,
@@ -270,6 +294,7 @@ const mapStateToProps = (store) => {
     toggleSideBar,
     admin,
     tamzirtapozServer,
+    token,
     login,
     username,
     urlServer,
