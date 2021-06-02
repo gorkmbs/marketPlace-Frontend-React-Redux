@@ -11,6 +11,7 @@ import {
   TOKEN_CHANGED,
   USERNAME_CHANGED,
   ADMIN_STATUS_CHANGED,
+  USER_SHOPNAME_CHANGED,
   USER_COLOR_CHANGED,
   USER_ID_CHANGED,
 } from "../actions/actionsForSite";
@@ -24,6 +25,7 @@ const NavbarSide = ({
   login,
   setAdmin,
   username,
+  setShopName,
   id,
   setId,
   tamzirtapozServer,
@@ -75,14 +77,16 @@ const NavbarSide = ({
         .then(function (response) {
           // console.log(response.data);
           // handle success
-
+          // console.log(response.data.success);
           if (response.data.success === true) {
+            console.log("response" + response.data.success);
             setLogin(response.data.success);
             setUsername(response.data.username);
             setToken(response.data.token);
             setColor(response.data.color);
             setId(response.data.id);
             setAdmin(response.data.admin);
+            setShopName(response.data.shopName);
             // setId(response.data.id);
             // setColor(response.data.color);
             // setAdmin(response.data.admin);
@@ -106,14 +110,8 @@ const NavbarSide = ({
           // setServerSideError(true);
           console.log(error);
         });
-
-      setTimeout(() => {
-        if (!login) {
-          Cookie.remove("Info");
-          Cookie.remove("Authorization");
-        }
-      }, 5000);
     }
+
     return () => {};
     // eslint-disable-next-line
   }, [login]);
@@ -329,6 +327,8 @@ const mapDispatchToProps = (dispatch) => {
     setId: (id) => dispatch({ type: USER_ID_CHANGED, payload: { id } }),
     setAdmin: (admin) =>
       dispatch({ type: ADMIN_STATUS_CHANGED, payload: { admin } }),
+    setShopName: (shopName) =>
+      dispatch({ type: USER_SHOPNAME_CHANGED, payload: { shopName } }),
   };
 };
 

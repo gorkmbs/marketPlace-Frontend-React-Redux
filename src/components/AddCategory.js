@@ -12,13 +12,10 @@ const AddCategory = ({ screenWidth, admin, urlServer, token }) => {
   const [isError, setIsError] = useState(false);
   const [submit, setSubmit] = useState("Add New Category");
   const [selectedCategory, setSelectedCategory] = useState("Unselected...");
-  // eslint-disable-next-line
-  const [errorSub, setErrorSub] = useState("");
-  // eslint-disable-next-line
-  const [isErrorSub, setIsErrorSub] = useState(false);
-  // eslint-disable-next-line
+
   const [submitSub, setSubmitSub] = useState("Add New Sub Category");
   const [dataCategory, setDataCategory] = useState([]);
+  const [dataSubCategory, setDataSubCategory] = useState([]);
 
   const getAllCategories = (e) => {
     e.preventDefault();
@@ -30,6 +27,23 @@ const AddCategory = ({ screenWidth, admin, urlServer, token }) => {
       .then((response) => {
         if (response.data.success === true) {
           setDataCategory(response.data.category);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getAllSubCategories = (selectedCategory) => {
+    axios({
+      method: "post",
+      url: urlServer + "/market/sub-categories",
+      headers: { Authorization: token },
+      data: { selectedCategory },
+    })
+      .then((response) => {
+        if (response.data.success === true) {
+          setDataSubCategory(response.data.subCategory);
         }
       })
       .catch((err) => {
@@ -51,13 +65,43 @@ const AddCategory = ({ screenWidth, admin, urlServer, token }) => {
           setSubmit("submitted");
           setIsError(false);
           getAllCategories(e);
+          setCategoryName("");
         } else {
-          setSubmit("error occured");
+          setSubmit(response.data.msg);
         }
       })
       .catch((err) => {
         setIsError(true);
         setSubmit("error occured");
+        setError("something went wrong :(");
+        console.log(err);
+      });
+  };
+
+  const addNewSubCategory = (e) => {
+    setSubmitSub("submitting");
+    e.preventDefault();
+    axios({
+      method: "post",
+      url: urlServer + "/market/add-new-sub-category",
+      headers: { Authorization: token },
+      data: { subCategoryName, selectedCategory },
+    })
+      .then((response) => {
+        if (response.data.success === true) {
+          setSubmitSub("submitted");
+          setIsError(false);
+          getAllCategories(e);
+          getAllSubCategories(selectedCategory);
+
+          setSubCategoryName("");
+        } else {
+          setSubmitSub(response.data.msg);
+        }
+      })
+      .catch((err) => {
+        setIsError(true);
+        setSubmitSub("error occured");
         setError("something went wrong :(");
         console.log(err);
       });
@@ -94,7 +138,12 @@ const AddCategory = ({ screenWidth, admin, urlServer, token }) => {
                 <br />
                 <form
                   onSubmit={(e) => {
-                    addNewCategory(e);
+                    if (categoryName !== "") {
+                      addNewCategory(e);
+                    } else {
+                      e.preventDefault();
+                      setSubmit("enter something first");
+                    }
                   }}
                 >
                   <div className="form-group m-2 p-2">
@@ -116,7 +165,7 @@ const AddCategory = ({ screenWidth, admin, urlServer, token }) => {
                   <div className="d-flex justify-content-center">
                     <button type="submit" className="btn btn-primary">
                       {submit}
-                      {submit === "Add New Category" ? (
+                      {submit !== "submitting" ? (
                         ""
                       ) : (
                         <>{<VscLoading className="rotate360" />}</>
@@ -126,7 +175,16 @@ const AddCategory = ({ screenWidth, admin, urlServer, token }) => {
                   <br />
                   <br />
                 </form>
-                <form onSubmit={() => {}}>
+                <form
+                  onSubmit={(e) => {
+                    if (subCategoryName !== "") {
+                      addNewSubCategory(e);
+                    } else {
+                      e.preventDefault();
+                      setSubmitSub("enter something first");
+                    }
+                  }}
+                >
                   <div className="form-group m-2 p-2">
                     <div className="container-fluid m-0 mb-4 p-0">
                       <Form.Group controlId="exampleForm.ControlSelect1">
@@ -142,7 +200,10 @@ const AddCategory = ({ screenWidth, admin, urlServer, token }) => {
                         </Form.Label>
                         <Form.Control
                           as="select"
-                          onChange={(e) => setSelectedCategory(e.target.value)}
+                          onChange={(e) => {
+                            setSelectedCategory(e.target.value);
+                            getAllSubCategories(e.target.value);
+                          }}
                         >
                           <option>Unselected...</option>
                           {dataCategory.map((item, index) => {
@@ -150,6 +211,11 @@ const AddCategory = ({ screenWidth, admin, urlServer, token }) => {
                           })}
                         </Form.Control>
                       </Form.Group>
+                      <p>
+                        {dataSubCategory.map((item, index) => {
+                          return <span key={index}>{item.subCategory}/</span>;
+                        })}
+                      </p>
                     </div>
                     <label htmlFor="username">Sub Category Name</label>
                     <input
@@ -173,15 +239,11 @@ const AddCategory = ({ screenWidth, admin, urlServer, token }) => {
                       className="form-text text-muted hidden"
                     ></small>
                   </div>
-                  {isErrorSub ? (
-                    <h4 style={{ color: "red" }}>{errorSub}</h4>
-                  ) : (
-                    ""
-                  )}
+
                   <div className="d-flex justify-content-center">
                     <button type="submit" className="btn btn-primary">
                       {submitSub}
-                      {submitSub === "Add New Sub Category" ? (
+                      {submitSub !== "submitting" ? (
                         ""
                       ) : (
                         <>{<VscLoading className="rotate360" />}</>

@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 import { VscLoading } from "react-icons/vsc";
+import { productSchema } from "../models/product";
+// const productSchema = require("../models/product");
 
-const AddProduct = ({ screenWidth }) => {
+const AddProduct = ({ screenWidth, login }) => {
   const [productName, setProductName] = useState("");
+  // eslint-disable-next-line
+  const [currentStep, setCurrentStep] = useState(0);
+  // eslint-disable-next-line
+  const [allSteps, setallSteps] = useState(productSchema);
   // eslint-disable-next-line
   const [error, setError] = useState("");
   // eslint-disable-next-line
@@ -13,6 +20,7 @@ const AddProduct = ({ screenWidth }) => {
 
   return (
     <>
+      {login ? <></> : <Redirect to="/" />}
       <div className="container-fluid m-0 p-0 addProductBackground">
         <div style={{ height: "5vh" }}></div>
         <div
@@ -39,96 +47,32 @@ const AddProduct = ({ screenWidth }) => {
             ></div>
             <br />
             <form onSubmit={() => {}}>
-              <div className="form-group m-2 p-2">
-                <label htmlFor="username">Product Name</label>
-                <input
-                  type="username"
-                  className="form-control"
-                  id="username"
-                  placeholder="What is the product's name?"
-                  value={productName}
-                  onChange={(e) => setProductName(e.target.value)}
-                />
-                <small
-                  id="name"
-                  className="form-text text-muted hidden"
-                ></small>
-              </div>
-              <div className="form-group m-2 p-2">
-                <label htmlFor="username">Product Definition</label>
-                <input
-                  type="username"
-                  className="form-control"
-                  id="username"
-                  placeholder="What is the product's name?"
-                  value={productName}
-                  onChange={(e) => setProductName(e.target.value)}
-                />
-                <small
-                  id="name"
-                  className="form-text text-muted hidden"
-                ></small>
-              </div>
-              <div className="form-group m-2 p-2">
-                <label htmlFor="username">Product Name</label>
-                <input
-                  type="username"
-                  className="form-control"
-                  id="username"
-                  placeholder="What is the product's name?"
-                  value={productName}
-                  onChange={(e) => setProductName(e.target.value)}
-                />
-                <small
-                  id="name"
-                  className="form-text text-muted hidden"
-                ></small>
-              </div>
-              <div className="form-group m-2 p-2">
-                <label htmlFor="username">Product Name</label>
-                <input
-                  type="username"
-                  className="form-control"
-                  id="username"
-                  placeholder="What is the product's name?"
-                  value={productName}
-                  onChange={(e) => setProductName(e.target.value)}
-                />
-                <small
-                  id="name"
-                  className="form-text text-muted hidden"
-                ></small>
-              </div>
-              <div className="form-group m-2 p-2">
-                <label htmlFor="username">Product Name</label>
-                <input
-                  type="username"
-                  className="form-control"
-                  id="username"
-                  placeholder="What is the product's name?"
-                  value={productName}
-                  onChange={(e) => setProductName(e.target.value)}
-                />
-                <small
-                  id="name"
-                  className="form-text text-muted hidden"
-                ></small>
-              </div>
-              <div className="form-group m-2 p-2">
-                <label htmlFor="username">Product Name</label>
-                <input
-                  type="username"
-                  className="form-control"
-                  id="username"
-                  placeholder="What is the product's name?"
-                  value={productName}
-                  onChange={(e) => setProductName(e.target.value)}
-                />
-                <small
-                  id="name"
-                  className="form-text text-muted hidden"
-                ></small>
-              </div>
+              {currentStep === 0 ? (
+                <>
+                  <div className="form-group m-2 p-2">
+                    <label htmlFor="username">Product Name</label>
+                    <input
+                      type="username"
+                      className="form-control"
+                      id="username"
+                      placeholder="What is the product's name?"
+                      value={productName}
+                      onChange={(e) => setProductName(e.target.value)}
+                    />
+                    <small
+                      id="name"
+                      className="form-text text-muted hidden"
+                    ></small>
+                    <div style={{ height: "10vh" }}></div>
+                    <div className="d-flex justify-content-between">
+                      <button className="btn btn-warning">Previous</button>
+                      <button className="btn btn-success">Next</button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
 
               <br />
 
@@ -155,8 +99,8 @@ const AddProduct = ({ screenWidth }) => {
 };
 
 const mapStateToProps = (state) => {
-  const { screenWidth } = state.site;
-  return { screenWidth };
+  const { screenWidth, login } = state.site;
+  return { screenWidth, login };
 };
 
 export default connect(mapStateToProps)(AddProduct);

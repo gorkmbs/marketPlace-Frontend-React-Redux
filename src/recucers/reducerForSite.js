@@ -6,6 +6,7 @@ import {
   USERNAME_CHANGED,
   USER_ID_CHANGED,
   USER_COLOR_CHANGED,
+  USER_SHOPNAME_CHANGED,
   ADMIN_STATUS_CHANGED,
   SCREEN_WIDTH_CHANGED,
 } from "../actions/actionsForSite";
@@ -23,6 +24,7 @@ const initialSiteStore = {
   admin: false,
   id: "",
   color: "",
+  shopName: "",
   isBigScreen: false,
   screenWidth: 500,
   urlServer,
@@ -41,6 +43,9 @@ function reducerForSite(state = initialSiteStore, action) {
   if (action.type === USER_ID_CHANGED) {
     return { ...state, id: action.payload.id };
   }
+  if (action.type === USER_SHOPNAME_CHANGED) {
+    return { ...state, shopName: action.payload.shopName };
+  }
   if (action.type === SCREEN_WIDTH_CHANGED) {
     return { ...state, screenWidth: action.payload.width };
   }
@@ -55,6 +60,8 @@ function reducerForSite(state = initialSiteStore, action) {
     }
   }
   if (action.type === LOGIN_STATUS_CHANGED) {
+    // console.log("payload: " + action.payload.login);
+    // console.log("state: " + state.login);
     return { ...state, login: action.payload.login };
   }
   if (action.type === TOKEN_CHANGED) {

@@ -10,6 +10,7 @@ import {
   USERNAME_CHANGED,
   USER_ID_CHANGED,
   ADMIN_STATUS_CHANGED,
+  USER_SHOPNAME_CHANGED,
   USER_COLOR_CHANGED,
 } from "../actions/actionsForSite";
 
@@ -20,6 +21,7 @@ const Authorization = ({
   login,
   setLogin,
   setToken,
+  setShopName,
   setUsername,
   setColor,
   setAdmin,
@@ -38,11 +40,13 @@ const Authorization = ({
       })
         .then((response) => {
           if (response.data.success === true) {
+            // console.log(response.data.success);
             setLogin(response.data.success);
             setToken(response.data.token);
             setId(response.data.id);
             setColor(response.data.color);
             setAdmin(response.data.admin);
+            setShopName(response.data.shopName);
             Cookie.set("Info", response.data.username, {
               expires: 2,
               sameSite: "Lax",
@@ -120,6 +124,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch({ type: USER_COLOR_CHANGED, payload: { color } }),
     setAdmin: (admin) =>
       dispatch({ type: ADMIN_STATUS_CHANGED, payload: { admin } }),
+    setShopName: (shopName) =>
+      dispatch({ type: USER_SHOPNAME_CHANGED, payload: { shopName } }),
   };
 };
 
