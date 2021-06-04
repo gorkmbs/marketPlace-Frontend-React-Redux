@@ -36,7 +36,7 @@ export const productSchema = [
     id: 3,
     name: "definition",
     status: "",
-    message: "Explain the product",
+    message: "A short brief",
     question: "What is this product?",
     success: false,
     errorMsg: "Please make a definition",
@@ -68,13 +68,20 @@ export const productSchema = [
   {
     id: 6,
     name: "specifications",
-    status: [],
-    message: "Specification list",
+    status: [
+      {
+        nameSpec: "",
+        specification: "",
+        success: false,
+        msg: "enter values please",
+      },
+    ],
+    message: "e.g. battery life",
     question: "What is your product's specifications ?",
     success: false,
     errorMsg: "Enter valid please",
     isError: false,
-    explanation: "",
+    explanation: "5 hours",
   },
   {
     id: 7,

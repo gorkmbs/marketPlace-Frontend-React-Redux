@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
+import { BsArrowBarRight } from "react-icons/bs";
+import { IconContext } from "react-icons";
 import { Form } from "react-bootstrap";
 import { VscLoading } from "react-icons/vsc";
 import { productSchema } from "../arrayFiles/product";
@@ -19,10 +21,10 @@ const AddProduct = ({
 }) => {
   var [currentText, setCurrentText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(7);
   const [dataCategory, setDataCategory] = useState([]);
   const [dataSubCategory, setDataSubCategory] = useState([]);
-  const [allSteps, setallSteps] = useState(productSchema);
+  const [allSteps, setAllSteps] = useState(productSchema);
   const [error, setError] = useState("");
   const [isError, setIsError] = useState(false);
   // eslint-disable-next-line
@@ -132,7 +134,7 @@ const AddProduct = ({
           <div
             className="container-fluid m-0 p-0"
             style={{
-              width: "85vw",
+              width: "92vw",
               maxWidth: "760px",
               background: "rgba(255,255,255,0.7)",
               boxShadow: "10px 10px 15px rgba(0,0,0,0.5)",
@@ -158,7 +160,7 @@ const AddProduct = ({
                               {...item}
                               currentText={currentText}
                               setCurrentText={setCurrentText}
-                              setallSteps={setallSteps}
+                              setAllSteps={setAllSteps}
                               allSteps={allSteps}
                               currentStep={currentStep}
                               setCurrentStep={setCurrentStep}
@@ -244,7 +246,7 @@ const AddProduct = ({
 const Steps = ({
   currentText,
   setCurrentText,
-  setallSteps,
+  setAllSteps,
   allSteps,
   setError,
   error,
@@ -254,39 +256,72 @@ const Steps = ({
   setCurrentStep,
   id,
   setSelectedCategory,
-  definition,
+
   message,
+  explanation,
   status,
   question,
   dataCategory,
   dataSubCategory,
-  success,
-  errorMsg,
 }) => {
   const handleNext = (e) => {
     e.preventDefault();
     let newState = allSteps;
-    newState[id].status = currentText;
-    setallSteps(newState);
+    if (id === 6) {
+    } else {
+      newState[id].status = currentText;
+      setAllSteps(newState);
+    }
+
     setCurrentStep(currentStep + 1);
     if (currentStep === 1) {
       setCurrentText("");
+    } else if (currentStep === 5) {
     } else {
       setCurrentText(allSteps[id < 10 ? id + 1 : id].status);
     }
   };
   const handlePrev = (e) => {
     e.preventDefault();
+    if (id === 7) {
+    }
     setCurrentStep(currentStep - 1);
     setCurrentText(allSteps[id > 0 ? id - 1 : id].status);
   };
 
+  const addNewSpec = (e) => {
+    e.preventDefault();
+    let newState = allSteps;
+    newState[id].status[newState[id].status.length] = {
+      nameSpec: "",
+      specification: "",
+      success: false,
+      msg: "enter values please",
+    };
+
+    setAllSteps(newState);
+    setIsError(true);
+  };
+
+  const forSixValidChecker = () => {
+    let errorState = [];
+    for (let i = 0; i < allSteps[id].status.length; i++) {
+      errorState[i] = !allSteps[id].status[i].success;
+    }
+    setIsError(errorState.includes(true));
+  };
+
   useEffect(() => {
-    let validation = validChecker(id, currentText);
-    setIsError(validation[0]);
-    setError(validation[1]);
+    if (id !== 4 && id !== 6) {
+      let validation = validChecker(id, currentText);
+      setIsError(validation[0]);
+      setError(validation[1]);
+    } else if (id === 4) {
+    } else if (id === 6) {
+      forSixValidChecker();
+    }
     // eslint-disable-next-line
-  }, [currentText, dataSubCategory, allSteps]);
+  }, [currentText, dataSubCategory, allSteps, isError]);
 
   return (
     <>
@@ -380,50 +415,206 @@ const Steps = ({
               </>
             ) : (
               <>
-                <label htmlFor="username">{question}</label>
-                <input
-                  autoFocus={true}
-                  type="text"
-                  className="form-control"
-                  style={{
-                    background: isError
-                      ? "rgba(255,255,255,0.9)"
-                      : "rgba(0,255,0,0.1)",
-                  }}
-                  id="username"
-                  placeholder={message}
-                  value={status}
-                  onChange={(e) => {
-                    setCurrentText(e.target.value);
-                    let newState = allSteps;
-                    newState[id].status = e.target.value;
-                    setallSteps(newState);
-                  }}
-                />
+                {id === 6 ? (
+                  <>
+                    {allSteps[id].status.map((item, index) => {
+                      return (
+                        <div key={index} className="container-fluid">
+                          <div className="d-flex m-0 p-0">
+                            <div className="container-fluid m-0 p-0">
+                              <label htmlFor="username">
+                                Specification Name
+                              </label>
+                              <input
+                                autoFocus={true}
+                                type="text"
+                                className="form-control"
+                                style={{
+                                  background:
+                                    allSteps[id].status[index].msg.substring(
+                                      0,
+                                      10
+                                    ) === `"specifica` ||
+                                    allSteps[id].status[index].msg ===
+                                      "enter values please"
+                                      ? "rgba(255,255,255,0.9)"
+                                      : "rgba(0,255,0,0.1)",
+                                }}
+                                id="username"
+                                placeholder={message}
+                                value={item.nameSpec}
+                                onChange={(e) => {
+                                  setCurrentText(e.target.value);
+                                  let newState = allSteps;
+                                  newState[id].status[index].nameSpec =
+                                    e.target.value;
+                                  let validation = validChecker(
+                                    id,
+                                    allSteps[id].status[index].nameSpec,
+                                    allSteps[id].status[index].specification
+                                  );
+                                  newState[id].status[index].success =
+                                    !validation[0];
+                                  newState[id].status[index].msg =
+                                    validation[1];
+                                  setAllSteps(newState);
+                                }}
+                              />
+                            </div>
+                            <IconContext.Provider
+                              value={{
+                                color: "blue",
+                                className: "global-class-name p-1",
+                                size: "60px",
+                              }}
+                            >
+                              <BsArrowBarRight />
+                            </IconContext.Provider>
+
+                            <div className="container-fluid m-0 p-0">
+                              <label htmlFor="username">Explanation</label>
+                              <input
+                                type="text"
+                                className="form-control"
+                                style={{
+                                  background: !allSteps[id].status[index]
+                                    .success
+                                    ? "rgba(255,255,255,0.9)"
+                                    : "rgba(0,255,0,0.1)",
+                                }}
+                                id="username"
+                                placeholder={explanation}
+                                value={item.specification}
+                                onChange={(e) => {
+                                  setCurrentText(e.target.value);
+                                  let newState = allSteps;
+                                  newState[id].status[index].specification =
+                                    e.target.value;
+                                  let validation = validChecker(
+                                    id,
+                                    allSteps[id].status[index].nameSpec,
+                                    allSteps[id].status[index].specification
+                                  );
+                                  newState[id].status[index].success =
+                                    !validation[0];
+                                  newState[id].status[index].msg =
+                                    validation[1];
+                                  setAllSteps(newState);
+                                }}
+                              />
+                            </div>
+                          </div>
+                          {status.length > 1 ? (
+                            <>
+                              <button
+                                className="btn btn-danger"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  let newState = [...allSteps];
+                                  newState[id].status = newState[
+                                    id
+                                  ].status.filter((item, ind) => ind !== index);
+                                  newState[id].success = !newState[id].success;
+                                  console.log(allSteps);
+                                  setAllSteps(newState);
+                                }}
+                              >
+                                delete
+                              </button>
+                            </>
+                          ) : (
+                            <></>
+                          )}
+
+                          {!allSteps[id].status[index].success ? (
+                            <>
+                              <p className="m-0 p-2 text-danger text-center">
+                                {allSteps[id].status[index].msg}
+                              </p>
+                            </>
+                          ) : (
+                            <>
+                              <p
+                                className="m-0 p-2 text-success text-wrap"
+                                style={{
+                                  width: "40vw",
+                                  maxWidth: "150px",
+                                }}
+                              >
+                                {`Ready to go :)`}
+                              </p>
+                            </>
+                          )}
+                          {allSteps[id].status[index].success &&
+                          allSteps[id].status.length === index + 1 ? (
+                            <button
+                              onClick={(e) => addNewSpec(e)}
+                              className="btn btn-primary"
+                            >
+                              Add 1 More Spec
+                            </button>
+                          ) : (
+                            <></>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <>
+                    <label htmlFor="username">{question}</label>
+                    <input
+                      autoFocus={true}
+                      type="text"
+                      className="form-control"
+                      style={{
+                        background: isError
+                          ? "rgba(255,255,255,0.9)"
+                          : "rgba(0,255,0,0.1)",
+                      }}
+                      id="username"
+                      placeholder={message}
+                      value={status}
+                      onChange={(e) => {
+                        setCurrentText(e.target.value);
+                        let newState = allSteps;
+                        newState[id].status = e.target.value;
+                        setAllSteps(newState);
+                      }}
+                    />
+                  </>
+                )}
               </>
             )}
 
             <small id="name" className="form-text text-muted hidden"></small>
-            {isError ? (
+            {id !== 6 ? (
               <>
-                <p
-                  className="m-0 p-2 text-danger"
-                  style={{ position: "absolute" }}
-                >
-                  {error}
-                </p>
+                {isError ? (
+                  <>
+                    <p
+                      className="m-0 p-2 text-danger"
+                      style={{ position: "absolute" }}
+                    >
+                      {error}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p
+                      className="m-0 p-2 text-success"
+                      style={{ position: "absolute" }}
+                    >
+                      {`Ready to go :)`}
+                    </p>
+                  </>
+                )}
               </>
             ) : (
-              <>
-                <p
-                  className="m-0 p-2 text-success"
-                  style={{ position: "absolute" }}
-                >
-                  Ready to go :)
-                </p>
-              </>
+              <></>
             )}
-            <div style={{ height: "10vh" }}></div>
+
+            <div style={{ height: "150px" }}></div>
             <div className="d-flex justify-content-around">
               <button
                 className="btn btn-warning"
@@ -454,6 +645,22 @@ const Steps = ({
                 </>
               )}
             </div>
+            {id === 4 ? (
+              <img
+                style={{ width: "80vw", maxWidth: "700px" }}
+                src={currentText}
+                alt="Product"
+                onLoad={() => {
+                  setIsError(false);
+                }}
+                onError={() => {
+                  setIsError(true);
+                  setError("Enter a valid URL please...");
+                }}
+              />
+            ) : (
+              <></>
+            )}
           </div>
         </>
       ) : (
@@ -463,7 +670,7 @@ const Steps = ({
   );
 };
 
-const validChecker = (id, currentText) => {
+const validChecker = (id, currentText, otherInfo) => {
   let schema;
 
   if (id === 0) {
@@ -482,7 +689,7 @@ const validChecker = (id, currentText) => {
   }
   if (id === 2) {
     schema = Joi.object({
-      currentText: Joi.string().trim().required().alphanum().min(5).max(30),
+      currentText: Joi.string().trim().required().min(5).max(50),
     });
     let testObj = { currentText };
     const validation = schema.validate(testObj);
@@ -494,7 +701,7 @@ const validChecker = (id, currentText) => {
   }
   if (id === 3) {
     schema = Joi.object({
-      currentText: Joi.string().trim().required().alphanum().min(5).max(30),
+      currentText: Joi.string().trim().required().min(5).max(100),
     });
     let testObj = { currentText };
     const validation = schema.validate(testObj);
@@ -504,21 +711,21 @@ const validChecker = (id, currentText) => {
       return [false, ""];
     }
   }
-  if (id === 4) {
-    schema = Joi.object({
-      currentText: Joi.string().trim().required().alphanum().min(5).max(30),
-    });
-    let testObj = { currentText };
-    const validation = schema.validate(testObj);
-    if (validation.error) {
-      return [true, validation.error.details[0].message.substring(14, 300)];
-    } else {
-      return [false, ""];
-    }
-  }
+  // if (id === 4) {
+  //   schema = Joi.object({
+  //     currentText: Joi.string().trim().required().alphanum().min(5).max(30),
+  //   });
+  //   let testObj = { currentText };
+  //   const validation = schema.validate(testObj);
+  //   if (validation.error) {
+  //     return [true, validation.error.details[0].message.substring(14, 300)];
+  //   } else {
+  //     return [false, ""];
+  //   }
+  // }
   if (id === 5) {
     schema = Joi.object({
-      currentText: Joi.string().trim().required().alphanum().min(5).max(30),
+      currentText: Joi.number().required().min(1).max(1000),
     });
     let testObj = { currentText };
     const validation = schema.validate(testObj);
@@ -530,12 +737,20 @@ const validChecker = (id, currentText) => {
   }
   if (id === 6) {
     schema = Joi.object({
-      currentText: Joi.string().trim().required().alphanum().min(5).max(30),
+      specificationName: Joi.string().trim().required().min(5).max(30),
     });
-    let testObj = { currentText };
+    let schema2 = Joi.object({
+      explanation: Joi.string().trim().required().min(5).max(30),
+    });
+    let testObj = { specificationName: currentText };
+    let testObj2 = { explanation: otherInfo };
+
     const validation = schema.validate(testObj);
+    const validation2 = schema2.validate(testObj2);
     if (validation.error) {
-      return [true, validation.error.details[0].message.substring(14, 300)];
+      return [true, validation.error.details[0].message.substring(0, 300)];
+    } else if (validation2.error) {
+      return [true, validation2.error.details[0].message.substring(0, 300)];
     } else {
       return [false, ""];
     }
