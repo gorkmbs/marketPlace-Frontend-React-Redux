@@ -27,8 +27,29 @@ const AddProduct = ({
   const [allSteps, setAllSteps] = useState(productSchema);
   const [error, setError] = useState("");
   const [isError, setIsError] = useState(false);
-  // eslint-disable-next-line
   const [submit, setSubmit] = useState("Add New Product");
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    setSubmit("Loading...");
+    axios({
+      method: "post",
+      url: urlServer + "/market/add-new-product",
+      headers: { Authorization: token },
+      data: { allSteps: allSteps },
+    })
+      .then((response) => {
+        if (response.data.success === true) {
+          setSubmit("The Product Succesfully Uploaded");
+        } else {
+          setSubmit(response.data.msg);
+        }
+      })
+      .catch((err) => {
+        setSubmit("An error occured :(");
+        console.log(err);
+      });
+  };
 
   const getAllCategories = () => {
     if (selectedCategory !== "Unselected...") {
@@ -147,7 +168,11 @@ const AddProduct = ({
               style={{ height: "3px", background: "rgba(55,50,250,0.5)" }}
             ></div>
             <br />
-            <form onSubmit={() => {}}>
+            <form
+              onSubmit={(e) => {
+                submitHandler(e);
+              }}
+            >
               {currentStep > 0 ? (
                 <>
                   {allSteps.map((item, index) => {
@@ -160,6 +185,7 @@ const AddProduct = ({
                               {...item}
                               currentText={currentText}
                               setCurrentText={setCurrentText}
+                              setSubmit={setSubmit}
                               setAllSteps={setAllSteps}
                               allSteps={allSteps}
                               currentStep={currentStep}
@@ -268,12 +294,44 @@ const AddProduct = ({
                                   </>
                                 ) : (
                                   <>
-                                    <h4 className="m-2 p-2 text-primary">
-                                      {`${item.question}`}:{" "}
-                                      <span className="text-dark">
-                                        {`${item.status}`}
-                                      </span>
-                                    </h4>
+                                    {index === 8 ? (
+                                      <>
+                                        <span
+                                          className="m-2 p-2 text-primary"
+                                          style={{ fontSize: "25px" }}
+                                        >
+                                          {`${item.question}:`}
+                                          <span className="m-2 p-2 text-dark">
+                                            {item.status}%
+                                          </span>
+                                        </span>
+                                        <h4 className="m-2 p-2 text-danger">
+                                          Final price: ${" "}
+                                          {`${(
+                                            ((Number(
+                                              allSteps[7].status.number
+                                            ) *
+                                              100 +
+                                              Number(
+                                                allSteps[7].status.decimal
+                                              )) *
+                                              ((100 -
+                                                Number(allSteps[8].status)) /
+                                                100)) /
+                                            100
+                                          ).toFixed(2)}`}
+                                        </h4>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <h4 className="m-2 p-2 text-primary">
+                                          {`${item.question}`}:{" "}
+                                          <span className="text-dark">
+                                            {`${item.status}`}
+                                          </span>
+                                        </h4>
+                                      </>
+                                    )}
                                   </>
                                 )}
                               </>
@@ -303,14 +361,45 @@ const AddProduct = ({
                   <div style={{ height: "50px" }}></div>
                   {isError ? <h4 style={{ color: "red" }}>{error}</h4> : ""}
                   <div className="d-flex justify-content-center">
-                    <button type="submit" className="btn btn-primary">
-                      {submit}
-                      {submit !== "Loading..." ? (
-                        ""
-                      ) : (
-                        <>{<VscLoading className="rotate360" />}</>
-                      )}
-                    </button>
+                    {submit === "The Product Succesfully Uploaded" ||
+                    submit === "Loading..." ? (
+                      <>
+                        <button
+                          type="submit"
+                          disabled
+                          className={`btn btn-${
+                            submit === "The Product Succesfully Uploaded"
+                              ? "success"
+                              : "primary"
+                          }`}
+                        >
+                          {submit}
+                          {submit !== "Loading..." ? (
+                            ""
+                          ) : (
+                            <>{<VscLoading className="rotate360" />}</>
+                          )}
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          type="submit"
+                          className={`btn btn-${
+                            submit === "The Product Succesfully Uploaded"
+                              ? "success"
+                              : "primary"
+                          }`}
+                        >
+                          {submit}
+                          {submit !== "Loading..." ? (
+                            ""
+                          ) : (
+                            <>{<VscLoading className="rotate360" />}</>
+                          )}
+                        </button>
+                      </>
+                    )}
                   </div>
                 </>
               ) : (
@@ -335,6 +424,7 @@ const Steps = ({
   allSteps,
   setError,
   error,
+  setSubmit,
   setIsError,
   isError,
   currentStep,
@@ -352,26 +442,12 @@ const Steps = ({
   const [testDone, setTestDone] = useState(false);
   const handleNext = (e) => {
     e.preventDefault();
-    let newState = allSteps;
-    if (id === 6 || id === 7) {
-    } else {
-      newState[id].status = currentText;
-      setAllSteps(newState);
-    }
     setCurrentStep(currentStep + 1);
-    if (currentStep === 1) {
-      setCurrentText("");
-    } else if (currentStep === 5) {
-    } else {
-      setCurrentText(allSteps[id < 10 ? id + 1 : id].status);
-    }
   };
+
   const handlePrev = (e) => {
     e.preventDefault();
-    if (id === 7 || id === 8) {
-    } else {
-      setCurrentText(allSteps[id > 0 ? id - 1 : id].status);
-    }
+
     setCurrentStep(currentStep - 1);
   };
 
@@ -398,8 +474,9 @@ const Steps = ({
   };
 
   useEffect(() => {
+    setSubmit("Add New Product");
     if (id !== 4 && id !== 6 && id !== 7 && id !== 10) {
-      let validation = validChecker(id, currentText);
+      let validation = validChecker(id, allSteps[id].status);
       setIsError(validation[0]);
       setError(validation[1]);
     } else if (id === 4) {
@@ -417,6 +494,12 @@ const Steps = ({
       if (allSteps[9].status === "available") {
         let validation = validChecker(id, allSteps[id].status);
         setIsError(validation[0]);
+        if (validation[0] && testDone === false) {
+          let newState = [...allSteps];
+          newState[id].status = "";
+          setAllSteps(newState);
+          setTestDone(true);
+        }
         setError(validation[1]);
       } else if (testDone === false) {
         let newState = [...allSteps];
@@ -450,6 +533,9 @@ const Steps = ({
                   autoFocus={true}
                   onChange={(e) => {
                     setCurrentText(e.target.value);
+                    let newState = [...allSteps];
+                    newState[id].status = e.target.value;
+                    setAllSteps(newState);
                     if (id === 0) {
                       setSelectedCategory(e.target.value);
                     }
@@ -594,7 +680,7 @@ const Steps = ({
                                 value={item.specification}
                                 onChange={(e) => {
                                   setCurrentText(e.target.value);
-                                  let newState = allSteps;
+                                  let newState = [...allSteps];
                                   newState[id].status[index].specification =
                                     e.target.value;
                                   let validation = validChecker(
@@ -747,7 +833,7 @@ const Steps = ({
                                   value={status}
                                   onChange={(e) => {
                                     setCurrentText(e.target.value);
-                                    let newState = allSteps;
+                                    let newState = [...allSteps];
                                     newState[id].status = e.target.value;
                                     setAllSteps(newState);
                                   }}
@@ -771,7 +857,7 @@ const Steps = ({
                                   readOnly
                                   onChange={(e) => {
                                     setCurrentText(e.target.value);
-                                    let newState = allSteps;
+                                    let newState = [...allSteps];
                                     newState[id].status = e.target.value;
                                     setAllSteps(newState);
                                   }}
@@ -824,7 +910,7 @@ const Steps = ({
                   <tr>
                     <td>Discount</td>
                     <td> - </td>
-                    <td>{currentText}%</td>
+                    <td>{allSteps[id].status}%</td>
                   </tr>
                   <tr>
                     <td>Final Price</td>
@@ -834,7 +920,7 @@ const Steps = ({
                       {`${(
                         ((Number(allSteps[7].status.number) * 100 +
                           Number(allSteps[7].status.decimal)) *
-                          ((100 - Number(currentText)) / 100)) /
+                          ((100 - Number(allSteps[8].status)) / 100)) /
                         100
                       ).toFixed(2)}`}
                     </td>
@@ -904,7 +990,7 @@ const Steps = ({
             {id === 4 ? (
               <img
                 style={{ width: "80vw", maxWidth: "700px" }}
-                src={currentText}
+                src={allSteps[id].status}
                 alt="Product"
                 onLoad={() => {
                   setIsError(false);
