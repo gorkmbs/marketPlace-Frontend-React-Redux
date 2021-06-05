@@ -85,15 +85,14 @@ export const productSchema = [
   },
   {
     id: 7,
-    price: "price",
-    status: "",
-    priceDecimal: "",
+    name: "price",
+    status: { number: null, decimal: null },
     message: "Enter The Price",
     question: "Price",
     success: false,
     errorMsg: "Please enter number",
     isError: false,
-    explanation: "",
+    explanation: "Decimal Point",
   },
 
   {
@@ -122,7 +121,7 @@ export const productSchema = [
     id: 10,
     name: "warrantyExplanation",
     status: "",
-    message: "How many day does this product have warranty?",
+    message: "How many months does this product have warranty?",
     question: "Warranty period",
     success: false,
     errorMsg: "Enter a valid number",

@@ -21,7 +21,7 @@ const AddProduct = ({
 }) => {
   var [currentText, setCurrentText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [currentStep, setCurrentStep] = useState(7);
+  const [currentStep, setCurrentStep] = useState(0);
   const [dataCategory, setDataCategory] = useState([]);
   const [dataSubCategory, setDataSubCategory] = useState([]);
   const [allSteps, setAllSteps] = useState(productSchema);
@@ -216,6 +216,91 @@ const AddProduct = ({
               <br />
               {currentStep > 11 ? (
                 <>
+                  <h2 className="text-center text-danger">Summary</h2>
+                  {allSteps.map((item, index) => {
+                    return (
+                      <div key={index} className="container-fluid">
+                        {index === 4 ? (
+                          <>
+                            <h4 className="m-2 p-2 text-primary">Image:</h4>
+                            <div className="d-flex justify-content-center">
+                              <img
+                                src={item.status}
+                                alt="Product"
+                                style={{
+                                  maxWidth: "300px",
+                                  width: "80vw",
+                                  maxHeight: "300px",
+                                }}
+                              />
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            {index === 6 ? (
+                              <>
+                                <h4 className="m-2 p-2 text-primary">
+                                  Specifications:
+                                </h4>
+                                {item.status.map((spec, index) => {
+                                  return (
+                                    <ul>
+                                      <li key={index}>
+                                        {spec.nameSpec}: {spec.specification}
+                                      </li>
+                                    </ul>
+                                  );
+                                })}
+                              </>
+                            ) : (
+                              <>
+                                {index === 7 ? (
+                                  <>
+                                    <span
+                                      className="m-2 p-2 text-primary"
+                                      style={{ fontSize: "30px" }}
+                                    >
+                                      {`${item.question}: `}{" "}
+                                      <span className="m-2 p-2 text-dark">
+                                        {`$ ${item.status.number}, ${item.status.decimal}`}
+                                      </span>
+                                    </span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <h4 className="m-2 p-2 text-primary">
+                                      {`${item.question}`}:{" "}
+                                      <span className="text-dark">
+                                        {`${item.status}`}
+                                      </span>
+                                    </h4>
+                                  </>
+                                )}
+                              </>
+                            )}
+                          </>
+                        )}
+                        <div className="d-flex justify-content-end">
+                          <button
+                            className="btn btn-warning"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrentStep(index + 1);
+                            }}
+                          >
+                            change
+                          </button>
+                        </div>
+                        <div
+                          style={{
+                            height: "3px",
+                            background: "rgba(0,0,0,1)",
+                          }}
+                        ></div>
+                      </div>
+                    );
+                  })}
+                  <div style={{ height: "50px" }}></div>
                   {isError ? <h4 style={{ color: "red" }}>{error}</h4> : ""}
                   <div className="d-flex justify-content-center">
                     <button type="submit" className="btn btn-primary">
@@ -264,15 +349,15 @@ const Steps = ({
   dataCategory,
   dataSubCategory,
 }) => {
+  const [testDone, setTestDone] = useState(false);
   const handleNext = (e) => {
     e.preventDefault();
     let newState = allSteps;
-    if (id === 6) {
+    if (id === 6 || id === 7) {
     } else {
       newState[id].status = currentText;
       setAllSteps(newState);
     }
-
     setCurrentStep(currentStep + 1);
     if (currentStep === 1) {
       setCurrentText("");
@@ -283,10 +368,11 @@ const Steps = ({
   };
   const handlePrev = (e) => {
     e.preventDefault();
-    if (id === 7) {
+    if (id === 7 || id === 8) {
+    } else {
+      setCurrentText(allSteps[id > 0 ? id - 1 : id].status);
     }
     setCurrentStep(currentStep - 1);
-    setCurrentText(allSteps[id > 0 ? id - 1 : id].status);
   };
 
   const addNewSpec = (e) => {
@@ -312,13 +398,35 @@ const Steps = ({
   };
 
   useEffect(() => {
-    if (id !== 4 && id !== 6) {
+    if (id !== 4 && id !== 6 && id !== 7 && id !== 10) {
       let validation = validChecker(id, currentText);
       setIsError(validation[0]);
       setError(validation[1]);
     } else if (id === 4) {
     } else if (id === 6) {
       forSixValidChecker();
+    } else if (id === 7) {
+      if (testDone === false) {
+        let validation = validChecker(id, allSteps[id].status);
+        setIsError(validation[0]);
+        setError(validation[1]);
+
+        setTestDone(true);
+      }
+    } else if (id === 10) {
+      if (allSteps[9].status === "available") {
+        let validation = validChecker(id, allSteps[id].status);
+        setIsError(validation[0]);
+        setError(validation[1]);
+      } else if (testDone === false) {
+        let newState = [...allSteps];
+        newState[id].status = "No warranty, go next";
+        setAllSteps(newState);
+        setIsError(false);
+        setError("");
+
+        setTestDone(true);
+      }
     }
     // eslint-disable-next-line
   }, [currentText, dataSubCategory, allSteps, isError]);
@@ -378,6 +486,7 @@ const Steps = ({
                     : ""}
                   {id === 8
                     ? [
+                        "0",
                         "5",
                         "10",
                         "15",
@@ -422,9 +531,7 @@ const Steps = ({
                         <div key={index} className="container-fluid">
                           <div className="d-flex m-0 p-0">
                             <div className="container-fluid m-0 p-0">
-                              <label htmlFor="username">
-                                Specification Name
-                              </label>
+                              <label htmlFor="username">Name</label>
                               <input
                                 autoFocus={true}
                                 type="text"
@@ -562,32 +669,181 @@ const Steps = ({
                   </>
                 ) : (
                   <>
-                    <label htmlFor="username">{question}</label>
-                    <input
-                      autoFocus={true}
-                      type="text"
-                      className="form-control"
-                      style={{
-                        background: isError
-                          ? "rgba(255,255,255,0.9)"
-                          : "rgba(0,255,0,0.1)",
-                      }}
-                      id="username"
-                      placeholder={message}
-                      value={status}
-                      onChange={(e) => {
-                        setCurrentText(e.target.value);
-                        let newState = allSteps;
-                        newState[id].status = e.target.value;
-                        setAllSteps(newState);
-                      }}
-                    />
+                    {id === 7 ? (
+                      <>
+                        <label htmlFor="username">{question}</label>
+                        <div className="d-flex justify-content-between">
+                          <input
+                            autoFocus={true}
+                            type="text"
+                            className="form-control"
+                            style={{
+                              background: isError
+                                ? "rgba(255,255,255,0.9)"
+                                : "rgba(0,255,0,0.1)",
+                            }}
+                            id="username"
+                            placeholder={message}
+                            value={status.number}
+                            onChange={(e) => {
+                              let newState = [...allSteps];
+                              newState[id].status.number = e.target.value;
+                              let validation = validChecker(
+                                id,
+                                allSteps[id].status
+                              );
+                              setIsError(validation[0]);
+                              setError(validation[1]);
+                              setAllSteps(newState);
+                            }}
+                          />
+                          <input
+                            autoFocus={true}
+                            type="text"
+                            className="form-control"
+                            style={{
+                              background: isError
+                                ? "rgba(255,255,255,0.9)"
+                                : "rgba(0,255,0,0.1)",
+                            }}
+                            id="username"
+                            placeholder={message}
+                            value={status.decimal}
+                            onChange={(e) => {
+                              let newState = [...allSteps];
+                              newState[id].status.decimal = e.target.value;
+                              let validation = validChecker(
+                                id,
+                                allSteps[id].status
+                              );
+                              setIsError(validation[0]);
+                              setError(validation[1]);
+                              setAllSteps(newState);
+                            }}
+                          />
+                        </div>
+                        <h1>
+                          $ {status.number} , {status.decimal}
+                        </h1>
+                      </>
+                    ) : (
+                      <>
+                        {id === 10 ? (
+                          <>
+                            {allSteps[9].status === "available" ? (
+                              <>
+                                <label htmlFor="username">{question}</label>
+                                <input
+                                  autoFocus={true}
+                                  type="text"
+                                  className="form-control"
+                                  style={{
+                                    background: isError
+                                      ? "rgba(255,255,255,0.9)"
+                                      : "rgba(0,255,0,0.1)",
+                                  }}
+                                  id="username"
+                                  placeholder={message}
+                                  value={status}
+                                  onChange={(e) => {
+                                    setCurrentText(e.target.value);
+                                    let newState = allSteps;
+                                    newState[id].status = e.target.value;
+                                    setAllSteps(newState);
+                                  }}
+                                />
+                              </>
+                            ) : (
+                              <>
+                                <label htmlFor="username">{question}</label>
+                                <input
+                                  autoFocus={true}
+                                  type="text"
+                                  className="form-control"
+                                  style={{
+                                    background: isError
+                                      ? "rgba(255,255,255,0.9)"
+                                      : "rgba(0,255,0,0.1)",
+                                  }}
+                                  id="username"
+                                  placeholder={"No warranty, go next"}
+                                  value={status}
+                                  readOnly
+                                  onChange={(e) => {
+                                    setCurrentText(e.target.value);
+                                    let newState = allSteps;
+                                    newState[id].status = e.target.value;
+                                    setAllSteps(newState);
+                                  }}
+                                />
+                              </>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <label htmlFor="username">{question}</label>
+                            <input
+                              autoFocus={true}
+                              type="text"
+                              className="form-control"
+                              style={{
+                                background: isError
+                                  ? "rgba(255,255,255,0.9)"
+                                  : "rgba(0,255,0,0.1)",
+                              }}
+                              id="username"
+                              placeholder={message}
+                              value={status}
+                              onChange={(e) => {
+                                setCurrentText(e.target.value);
+                                let newState = allSteps;
+                                newState[id].status = e.target.value;
+                                setAllSteps(newState);
+                              }}
+                            />
+                          </>
+                        )}
+                      </>
+                    )}
                   </>
                 )}
               </>
             )}
 
             <small id="name" className="form-text text-muted hidden"></small>
+            {id === 8 ? (
+              <>
+                <table>
+                  <tr>
+                    <td>Price</td>
+                    <td></td>
+                    <td>
+                      $ {allSteps[7].status.number} {allSteps[7].status.decimal}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Discount</td>
+                    <td> - </td>
+                    <td>{currentText}%</td>
+                  </tr>
+                  <tr>
+                    <td>Final Price</td>
+                    <td></td>
+                    <td>
+                      ${" "}
+                      {`${(
+                        ((Number(allSteps[7].status.number) * 100 +
+                          Number(allSteps[7].status.decimal)) *
+                          ((100 - Number(currentText)) / 100)) /
+                        100
+                      ).toFixed(2)}`}
+                    </td>
+                  </tr>
+                </table>
+              </>
+            ) : (
+              <></>
+            )}
             {id !== 6 ? (
               <>
                 {isError ? (
@@ -757,12 +1013,13 @@ const validChecker = (id, currentText, otherInfo) => {
   }
   if (id === 7) {
     schema = Joi.object({
-      currentText: Joi.string().trim().required().alphanum().min(5).max(30),
+      price: Joi.number().required().min(1).max(30000),
+      decimal: Joi.number().required().min(0).max(99),
     });
-    let testObj = { currentText };
+    let testObj = { price: currentText.number, decimal: currentText.decimal };
     const validation = schema.validate(testObj);
     if (validation.error) {
-      return [true, validation.error.details[0].message.substring(14, 300)];
+      return [true, validation.error.details[0].message.substring(0, 300)];
     } else {
       return [false, ""];
     }
@@ -783,7 +1040,7 @@ const validChecker = (id, currentText, otherInfo) => {
   }
   if (id === 10) {
     schema = Joi.object({
-      currentText: Joi.string().trim().required().alphanum().min(5).max(30),
+      currentText: Joi.number().required().min(1).max(36),
     });
     let testObj = { currentText };
     const validation = schema.validate(testObj);
