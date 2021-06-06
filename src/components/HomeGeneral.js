@@ -3,15 +3,28 @@ import { Carousel } from "react-bootstrap";
 import { connect } from "react-redux";
 import brands from "../assets/brands.jpg";
 import discount from "../assets/discount.jpg";
+import SingleProduct from "./SingleProduct";
 // import { FcNext, FcPrevious } from "react-icons/fc";
 
 // import { IconContext } from "react-icons";
 
 import { homeScreenItems } from "../arrayFiles/homeScreenItems";
+import { ALL_PRODUCT_UPDATED } from "../actions/actionsForBag";
+import axios from "axios";
 
-const HomeGeneral = ({ isBigScreen }) => {
+const HomeGeneral = ({
+  isBigScreen,
+  login,
+  allProducts,
+
+  token,
+  setAllProducts,
+  urlServer,
+}) => {
   const [indexForSlide, setIndexForSlide] = useState(0);
   const [smallerPage, setSmallerPage] = useState(true);
+  const [productsLoaded, setProductsLoaded] = useState(false);
+
   const pageSizeChanged = () => {
     if (window.innerWidth < 930) {
       setSmallerPage(true);
@@ -19,6 +32,29 @@ const HomeGeneral = ({ isBigScreen }) => {
       setSmallerPage(false);
     }
   };
+
+  useEffect(() => {
+    if (!productsLoaded) {
+      axios({
+        method: "get",
+        url: urlServer + "/market/all-products",
+      })
+        .then((response) => {
+          if (response.data.success) {
+            setAllProducts(response.data.productArray);
+            setProductsLoaded(true);
+          } else {
+            setProductsLoaded(false);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          window.alert(err);
+          setProductsLoaded(false);
+        });
+    }
+    // eslint-disable-next-line
+  }, [login, allProducts, token]);
 
   useEffect(() => {
     window.addEventListener("resize", pageSizeChanged);
@@ -97,7 +133,10 @@ const HomeGeneral = ({ isBigScreen }) => {
               activeIndex={indexForSlide}
               onSelect={handleSelect}
               slide={true}
+              fade
               indicators={true}
+              variant="dark"
+              indicatorLabels={[1, 2, 3, 4]}
               nextLabel=""
               nextIcon={
                 <span>
@@ -125,27 +164,29 @@ const HomeGeneral = ({ isBigScreen }) => {
                 </span>
               }
             >
-              {homeScreenItems.map((item) => {
+              {homeScreenItems.map((item, index) => {
                 return (
                   <Carousel.Item key={item.id}>
-                    <img
-                      onClick={() => {
-                        // window.location.reload();
-                      }}
-                      ket={item.id}
-                      className="d-block w-100"
-                      src={item.img}
-                      alt={`${item.id} slide`}
-                    />
+                    <div className="container-fluid m-0 p-0">
+                      <img
+                        onClick={() => {
+                          // window.location.reload();
+                        }}
+                        key={item.id}
+                        className="img-fluid rounded"
+                        src={item.img}
+                        alt={`${item.id} slide`}
+                      />
+                    </div>
                   </Carousel.Item>
                 );
               })}
             </Carousel>
-            <div className="d-flex justify-content-center flex-wrap m-1 p-1">
+            <div className="d-flex justify-content-around flex-wrap m-1 p-1">
               {homeScreenItems.map((item) => {
                 return (
                   <button
-                    onClick={() => setIndexForSlide(item.id - 1)}
+                    onMouseOver={() => setIndexForSlide(item.id - 1)}
                     key={item.id}
                     style={{
                       color:
@@ -174,14 +215,27 @@ const HomeGeneral = ({ isBigScreen }) => {
             </div>
           </div>
         </div>
+        <div className="d-flex justify-content-around flex-wrap m-3 p-3 homeProductList align-items-center">
+          {allProducts.map((item, index) => {
+            return <SingleProduct key={index} {...item} />;
+          })}
+        </div>
       </div>
     </>
   );
 };
 
 const mapStateToProps = (state) => {
-  const { isBigScreen } = state.site;
-  return { isBigScreen };
+  const { isBigScreen, login, token, urlServer } = state.site;
+  const { allProducts } = state.bag;
+  return { isBigScreen, allProducts, login, token, urlServer };
 };
 
-export default connect(mapStateToProps)(HomeGeneral);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setAllProducts: (allProducts) =>
+      dispatch({ type: ALL_PRODUCT_UPDATED, payload: { allProducts } }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeGeneral);

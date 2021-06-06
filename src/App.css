@@ -11,6 +11,10 @@
   background: linear-gradient(180deg, rgb(76, 183, 63), rgb(255, 255, 255));
 }
 
+.homeProductList {
+  background: linear-gradient(180deg, rgb(244, 245, 244), rgb(243, 207, 207));
+}
+
 .addProductBackground {
   /* background: linear-gradient(30deg, rgb(63, 191, 241), rgb(105, 240, 233)); */
   background: linear-gradient(210deg, rgb(0, 255, 106), rgb(105, 240, 233));

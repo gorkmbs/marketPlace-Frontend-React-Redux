@@ -562,7 +562,7 @@ const Steps = ({
                   {id === 1
                     ? dataSubCategory.map((item, index) => {
                         return (
-                          <option key={index} value={item.category}>
+                          <option key={index} value={item.subCategory}>
                             {item.subCategory}
                           </option>
                         );

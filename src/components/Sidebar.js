@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { RiMenuFill } from "react-icons/ri";
 import { IconContext } from "react-icons";
 import { AiOutlineCloseCircle } from "react-icons/ai";
@@ -139,7 +140,9 @@ const Sidebar = ({
                 ™zirt@poz
               </a>
             </div>
-            <p>market</p>
+            <Link to="/" className="linkWithoutBlueLine">
+              market
+            </Link>
           </div>
         </SidebarHeader>
 
