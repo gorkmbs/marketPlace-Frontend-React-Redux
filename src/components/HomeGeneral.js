@@ -16,7 +16,7 @@ const HomeGeneral = ({
   isBigScreen,
   login,
   allProducts,
-
+  screenWidth,
   token,
   setAllProducts,
   urlServer,
@@ -188,6 +188,7 @@ const HomeGeneral = ({
                   <button
                     onMouseOver={() => setIndexForSlide(item.id - 1)}
                     key={item.id}
+                    className="m-1 p-1"
                     style={{
                       color:
                         item.id - 1 === indexForSlide
@@ -215,7 +216,11 @@ const HomeGeneral = ({
             </div>
           </div>
         </div>
-        <div className="d-flex justify-content-around flex-wrap m-3 p-3 homeProductList align-items-center">
+        <div
+          className={`d-flex justify-content-around flex-wrap ${
+            screenWidth > 405 ? "m-3 p-3" : "m-0 p-0 mt-4"
+          } homeProductList align-items-center`}
+        >
           {allProducts.map((item, index) => {
             return <SingleProduct key={index} {...item} />;
           })}
@@ -226,9 +231,9 @@ const HomeGeneral = ({
 };
 
 const mapStateToProps = (state) => {
-  const { isBigScreen, login, token, urlServer } = state.site;
+  const { isBigScreen, login, token, urlServer, screenWidth } = state.site;
   const { allProducts } = state.bag;
-  return { isBigScreen, allProducts, login, token, urlServer };
+  return { isBigScreen, allProducts, login, token, urlServer, screenWidth };
 };
 
 const mapDispatchToProps = (dispatch) => {

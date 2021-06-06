@@ -14,7 +14,9 @@ const SingleProduct = ({
 }) => {
   return (
     <div
-      className="container-fluid m-2 p-2"
+      className={`container-fluid ${
+        screenWidth > 630 ? "m-3 p-2" : "m-0 mb-2 p-0"
+      }`}
       style={{
         width: screenWidth > 620 ? "250px" : "150px",
         background: "white",
