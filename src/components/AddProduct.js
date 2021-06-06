@@ -177,7 +177,7 @@ const AddProduct = ({
                 <>
                   {allSteps.map((item, index) => {
                     return (
-                      <>
+                      <div className="container-fluid m-0 p-0" key={index}>
                         {currentStep === item.id + 1 ? (
                           <>
                             <Steps
@@ -202,7 +202,7 @@ const AddProduct = ({
                         ) : (
                           <></>
                         )}
-                      </>
+                      </div>
                     );
                   })}
                 </>
@@ -440,6 +440,7 @@ const Steps = ({
   dataSubCategory,
 }) => {
   const [testDone, setTestDone] = useState(false);
+
   const handleNext = (e) => {
     e.preventDefault();
     setCurrentStep(currentStep + 1);
@@ -525,6 +526,11 @@ const Steps = ({
                 <label>{question}</label>
                 <Form.Control
                   as="select"
+                  defaultValue={
+                    allSteps[id].status === ""
+                      ? "Unselected..."
+                      : allSteps[id].status
+                  }
                   style={{
                     background: isError
                       ? "rgba(255,255,255,0.9)"
@@ -535,22 +541,19 @@ const Steps = ({
                     setCurrentText(e.target.value);
                     let newState = [...allSteps];
                     newState[id].status = e.target.value;
-                    setAllSteps(newState);
+
                     if (id === 0) {
                       setSelectedCategory(e.target.value);
+                      newState[1].status = "";
                     }
+                    setAllSteps(newState);
                   }}
                 >
-                  <option>Unselected...</option>
+                  <option value="Unselected...">Unselected...</option>
                   {id === 0
                     ? dataCategory.map((item, index) => {
                         return (
-                          <option
-                            key={index}
-                            selected={
-                              status === item.category ? "selected" : ""
-                            }
-                          >
+                          <option key={index} value={item.category}>
                             {item.category}
                           </option>
                         );
@@ -559,12 +562,7 @@ const Steps = ({
                   {id === 1
                     ? dataSubCategory.map((item, index) => {
                         return (
-                          <option
-                            key={index}
-                            selected={
-                              status === item.subCategory ? "selected" : ""
-                            }
-                          >
+                          <option key={index} value={item.category}>
                             {item.subCategory}
                           </option>
                         );
@@ -585,10 +583,7 @@ const Steps = ({
                         "50",
                       ].map((item, index) => {
                         return (
-                          <option
-                            key={index}
-                            selected={status === item ? "selected" : ""}
-                          >
+                          <option key={index} value={item.category}>
                             {item}
                           </option>
                         );
@@ -597,10 +592,7 @@ const Steps = ({
                   {id === 9
                     ? ["available", "not available"].map((item, index) => {
                         return (
-                          <option
-                            key={index}
-                            selected={status === item ? "selected" : ""}
-                          >
+                          <option key={index} value={item.category}>
                             {item}
                           </option>
                         );

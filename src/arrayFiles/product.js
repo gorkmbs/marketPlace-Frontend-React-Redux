@@ -86,7 +86,7 @@ export const productSchema = [
   {
     id: 7,
     name: "price",
-    status: { number: null, decimal: null },
+    status: { number: "", decimal: "" },
     message: "Enter The Price",
     question: "Price",
     success: false,
