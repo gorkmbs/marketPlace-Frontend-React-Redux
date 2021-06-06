@@ -179,7 +179,7 @@ const NavbarSide = ({
                       )}, 0.9)`,
                     }}
                   >
-                    <div className="dropdown-item">
+                    <Dropdown.Item eventKey="1" as="div">
                       <div className=" d-flex justify-content-center bg-dark">
                         <button
                           className=" btn btn-dark p-0 m-0 d-flex text-primary"
@@ -190,9 +190,9 @@ const NavbarSide = ({
                           My Profile
                         </button>
                       </div>
-                    </div>
+                    </Dropdown.Item>
 
-                    <div className="dropdown-item">
+                    <Dropdown.Item eventKey="2" as="div">
                       <Link
                         to={`/add-new-product`}
                         className="linkWithoutBlueLine"
@@ -201,9 +201,9 @@ const NavbarSide = ({
                           Sell Product
                         </div>
                       </Link>
-                    </div>
+                    </Dropdown.Item>
                     {admin ? (
-                      <div className="dropdown-item">
+                      <Dropdown.Item eventKey="3" as="div">
                         <Link
                           to={`/add-new-category`}
                           className="linkWithoutBlueLine"
@@ -212,19 +212,23 @@ const NavbarSide = ({
                             Add Category (Admin)
                           </div>
                         </Link>
-                      </div>
+                      </Dropdown.Item>
                     ) : (
                       <></>
                     )}
-                    <div className="dropdown-item">
+                    <Dropdown.Item eventKey="4" as="div">
                       <Link to={`/lottery`} className="linkWithoutBlueLine">
                         <div className="bg-dark p-0 m-0 d-flex justify-content-center">
                           Lottery
                         </div>
                       </Link>
-                    </div>
+                    </Dropdown.Item>
                     <Dropdown.Divider />
-                    <Dropdown.Item style={{ background: "grey" }} eventKey="4">
+                    <Dropdown.Item
+                      as="div"
+                      style={{ background: "grey" }}
+                      eventKey="4"
+                    >
                       <div className="p-0 m-0 d-flex justify-content-center">
                         <button
                           type="button"
