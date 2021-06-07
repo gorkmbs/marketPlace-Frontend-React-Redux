@@ -176,7 +176,7 @@ const Sidebar = ({
                 </IconContext.Provider>
               }
             >
-              Wearing
+              Clothes
             </MenuItem>
             <SubMenu
               prefix={<span className="badge gray">New</span>}

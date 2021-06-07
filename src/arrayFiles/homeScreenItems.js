@@ -1,6 +1,6 @@
 import food from "../assets/food.jpg";
 import technology from "../assets/technology.png";
-import clothes from "../assets/wearing.jpg";
+import clothes from "../assets/clothes.jpg";
 import pet from "../assets/pet.jpg";
 export const homeScreenItems = [
   {
