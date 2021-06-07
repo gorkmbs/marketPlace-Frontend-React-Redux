@@ -1,6 +1,6 @@
 import food from "../assets/food.jpg";
 import technology from "../assets/technology.png";
-import wearing from "../assets/wearing.jpg";
+import clothes from "../assets/wearing.jpg";
 import pet from "../assets/pet.jpg";
 export const homeScreenItems = [
   {
@@ -11,8 +11,8 @@ export const homeScreenItems = [
   },
   {
     id: 2,
-    img: wearing,
-    header: "wearing",
+    img: clothes,
+    header: "clothes",
     text: "",
   },
   {
