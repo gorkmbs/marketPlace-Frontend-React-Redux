@@ -27,6 +27,7 @@ const NavbarSide = ({
   username,
   setShopName,
   id,
+  bagItems,
   setId,
   tamzirtapozServer,
   admin,
@@ -142,7 +143,33 @@ const NavbarSide = ({
           </a>
         </div>
 
-        <div className="d-flex justify-content-end align-items-center p-0 m-0">
+        <div className="d-flex  align-items-center p-0 m-0">
+          <p
+            className="m-0 p-1"
+            style={{
+              background: "blue",
+              position: "absolute",
+              transform: "translate(-10px , -7px)",
+              border: "1px",
+              borderColor: "blue",
+              borderStyle: "solid",
+              borderRadius: "50%",
+            }}
+          >
+            {bagItems.reduce((total, item) => {
+              total += item.count;
+              return total;
+            }, 0) === 0 ? (
+              <></>
+            ) : (
+              <>
+                {bagItems.reduce((total, item) => {
+                  total += item.count;
+                  return total;
+                }, 0)}
+              </>
+            )}
+          </p>
           <IconContext.Provider
             value={{
               color: "rgb(53,244,244)",
@@ -302,6 +329,7 @@ const mapStateToProps = (store) => {
     id,
     color,
   } = store.site;
+  const { bagItems } = store.bag;
   return {
     isBigScreen,
     toggleSideBar,
@@ -310,6 +338,7 @@ const mapStateToProps = (store) => {
     token,
     login,
     username,
+    bagItems,
     urlServer,
     id,
     color,
