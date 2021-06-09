@@ -87,3 +87,16 @@
 .linkWithoutBlueLine {
   text-decoration: none;
 }
+
+.bottomToTop {
+  animation: bottomToTopk 1s ease-out;
+}
+
+@keyframes bottomToTopk {
+  from {
+    transform: translate(0px, +100vh);
+  }
+  to {
+    transform: translate(0px, 0px);
+  }
+}

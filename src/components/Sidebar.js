@@ -17,7 +17,6 @@ import {
   SidebarFooter,
   SidebarContent,
 } from "react-pro-sidebar";
-import { FaGithub } from "react-icons/fa";
 
 const Sidebar = ({
   toggleSideBar,
@@ -224,7 +223,6 @@ const Sidebar = ({
               padding: "20px 24px",
             }}
           >
-            <FaGithub />
             <a
               href={tamzirtapozServer}
               className="m-0 p-0  linkWithoutBlueLine"

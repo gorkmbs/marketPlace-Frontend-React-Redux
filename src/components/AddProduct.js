@@ -132,6 +132,9 @@ const AddProduct = ({
     }
 
     if (selectedCategory === "") {
+      let newState = [...allSteps];
+      newState[0].status = "";
+      newState[1].status = "";
     } else {
       if (currentStep === 2) {
         getAllSubCategories(selectedCategory);

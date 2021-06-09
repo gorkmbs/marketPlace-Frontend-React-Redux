@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, Redirect } from "react-router-dom";
 import { BiShoppingBag } from "react-icons/bi";
 import { Dropdown, ButtonGroup } from "react-bootstrap";
 import { IconContext } from "react-icons";
 import { connect } from "react-redux";
+import { Modal, Button } from "react-bootstrap";
 
 import {
   TOGGLE_SIDE_BAR,
@@ -39,6 +40,21 @@ const NavbarSide = ({
   setToken,
   setUsername,
 }) => {
+  const [openBagEmptyModal, setOpenBagEmptyModal] = useState(false);
+  const [openBagPage, setOpenBagPage] = useState(false);
+
+  const handleOpenBag = (e) => {
+    e.preventDefault();
+    if (bagItems.length > 0) {
+      setOpenBagPage(true);
+      setTimeout(() => {
+        setOpenBagPage(false);
+      }, 550);
+    } else {
+      setOpenBagEmptyModal(true);
+    }
+  };
+
   const logOut = () => {
     Cookie.remove("Authorization");
     Cookie.remove("Info");
@@ -119,6 +135,43 @@ const NavbarSide = ({
 
   return (
     <>
+      {openBagPage ? <Redirect to="/my-bag" /> : <></>}
+      {openBagEmptyModal ? (
+        <>
+          <Modal
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            show={openBagEmptyModal}
+            style={{ background: "rgba(0,0,0,0.5)" }}
+            onHide={() => {
+              setOpenBagEmptyModal(false);
+            }}
+            centered
+          >
+            <Modal.Header closeButton closeLabel="">
+              <Modal.Title id="contained-modal-title-vcenter">
+                There is nothing in your bag
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>You can add products to your bag</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant="danger"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setOpenBagEmptyModal(false);
+                }}
+              >
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </>
+      ) : (
+        <></>
+      )}
       <nav className="navbar navbar-expand d-flex flex-wrap justify-content-between sticky-top fixed-top NavbarPosition p-0 m-0 align-top ">
         {isBigScreen ? (
           <></>
@@ -143,42 +196,55 @@ const NavbarSide = ({
           </a>
         </div>
 
-        <div className="d-flex  align-items-center p-0 m-0">
-          <p
-            className="m-0 p-1"
-            style={{
-              background: "blue",
-              position: "absolute",
-              transform: "translate(-10px , -7px)",
-              border: "1px",
-              borderColor: "blue",
-              borderStyle: "solid",
-              borderRadius: "50%",
+        <div className="d-flex align-items-center p-0 m-0">
+          <button
+            className="btn m-0 p-0"
+            onClick={(e) => {
+              handleOpenBag(e);
             }}
           >
-            {bagItems.reduce((total, item) => {
-              total += item.count;
-              return total;
-            }, 0) === 0 ? (
-              <></>
-            ) : (
-              <>
-                {bagItems.reduce((total, item) => {
-                  total += item.count;
-                  return total;
-                }, 0)}
-              </>
-            )}
-          </p>
-          <IconContext.Provider
-            value={{
-              color: "rgb(53,244,244)",
-              className: "global-class-name",
-              size: "30px",
-            }}
-          >
-            <BiShoppingBag />
-          </IconContext.Provider>
+            <p
+              className="m-0"
+              style={{
+                background: bagItems.length > 0 ? "blue" : "transparent",
+                paddingRight: "3px",
+                paddingLeft: "3px",
+                paddingTop: "1px",
+                paddingBottom: "1px",
+                position: "absolute",
+                color: "white",
+                fontSize: "15px",
+                transform: "translate(-10px , -7px)",
+                border: bagItems.length > 0 ? "1px" : "0px",
+                borderColor: "blue",
+                borderStyle: "solid",
+                borderRadius: "50%",
+              }}
+            >
+              {bagItems.reduce((total, item) => {
+                total += item.count;
+                return total;
+              }, 0) === 0 ? (
+                <></>
+              ) : (
+                <>
+                  {bagItems.reduce((total, item) => {
+                    total += item.count;
+                    return total;
+                  }, 0)}
+                </>
+              )}
+            </p>
+            <IconContext.Provider
+              value={{
+                color: "rgb(53,244,244)",
+                className: "global-class-name",
+                size: "30px",
+              }}
+            >
+              <BiShoppingBag />
+            </IconContext.Provider>
+          </button>
           <div className="m-0 p-1 ">
             {login ? (
               <>

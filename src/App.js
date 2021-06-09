@@ -18,6 +18,7 @@ import Authorization from "./components/Authorization";
 import HomeGeneral from "./components/HomeGeneral";
 import AddProduct from "./components/AddProduct";
 import AddCategory from "./components/AddCategory";
+import BagItems from "./components/BagItems";
 
 const rootReducer = combineReducers({
   site: reducerForSite,
@@ -113,6 +114,9 @@ function App() {
                   </Route>
                   <Route path="/add-new-category">
                     <AddCategory />
+                  </Route>
+                  <Route path="/my-bag">
+                    <BagItems />
                   </Route>
                   <Route path="/authorization/:id">
                     <Authorization />
