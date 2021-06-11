@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -8,7 +8,19 @@ import {
 import { GiShoppingCart } from "react-icons/gi";
 import { IconContext } from "react-icons";
 
-const BagItems = ({ bagItems, addNewItemToBag, removeItem }) => {
+const BagItems = ({ bagItems, addNewItemToBag, removeItem, screenWidth }) => {
+  const [pageUpped, setPageUpped] = useState(false);
+
+  // eslint-disable-next-line
+  useEffect(() => {
+    if (!pageUpped) {
+      setTimeout(() => {
+        window.scrollTo({ left: 0, top: -100 });
+      }, 150);
+      setPageUpped(true);
+    }
+  });
+
   const countChanger = (e, task, item) => {
     e.preventDefault();
     if (task === "add") {
@@ -43,6 +55,19 @@ const BagItems = ({ bagItems, addNewItemToBag, removeItem }) => {
               <GiShoppingCart />
             </IconContext.Provider>
           </h1>
+          {bagItems.length === 0 ? (
+            <>
+              <div style={{ height: "10vh" }}></div>
+              <div className="d-flex justify-content-center m-2 p-2">
+                Your bag is empty !
+              </div>
+              <div className="d-flex justify-content-center m-2 p-2">
+                <Link to="/">Go Main Page</Link>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
           {bagItems.map((item, index) => {
             return (
               <>
@@ -171,6 +196,80 @@ const BagItems = ({ bagItems, addNewItemToBag, removeItem }) => {
               </>
             );
           })}
+          {bagItems.length > 0 ? (
+            <>
+              <footer className="fixed-bottom">
+                <div
+                  className="d-flex justify-content-center m-0 p-2"
+                  style={{
+                    background: "rgba(0,0,255,0.3)",
+                    width: screenWidth < 769 ? "100vw" : screenWidth - 80,
+                    height: "15vh",
+                    zIndex: "-220",
+                    transform: screenWidth < 769 ? "" : "translate(80px , 0px)",
+                  }}
+                >
+                  <div
+                    className="d-flex justify-content-center align-items-center"
+                    style={{
+                      background: "rgba(255,255,200,1)",
+                      width: "45vw",
+                      fontSize: screenWidth < 769 ? "20px" : "3vw",
+                    }}
+                  >
+                    Total: $
+                    {bagItems.reduce((total, item) => {
+                      total += item.count;
+                      return total;
+                    }, 0) === 0 ? (
+                      <>0</>
+                    ) : (
+                      <>
+                        {bagItems
+                          .reduce((total, item) => {
+                            total +=
+                              item.count *
+                              (((Number(item.item.price) * 100 +
+                                Number(item.item.priceDecimal)) *
+                                ((100 - Number(item.item.discountPercent)) /
+                                  100)) /
+                                100);
+
+                            return total;
+                          }, 0)
+                          .toFixed(2)}
+                      </>
+                    )}
+                  </div>
+                  <div
+                    className="d-flex justify-content-center align-items-center"
+                    style={{
+                      background: "rgba(0,250,55,1)",
+                      width: "45vw",
+                      fontSize: screenWidth < 769 ? "20px" : "4vw",
+                      border: "2px",
+                      borderStyle: "solid",
+                      borderColor: "rgba(255,255,255,1)",
+                      borderRadius: "20px 80px 80px 20px",
+                    }}
+                  >
+                    <Link to="/finish-shopping" className="linkWithoutBlueLine">
+                      <p
+                        className="m-1 p-1 text-center"
+                        style={{ fontSize: screenWidth < 769 ? "20px" : "4vw" }}
+                      >
+                        Finish Shopping
+                      </p>
+                    </Link>
+                  </div>
+                </div>
+              </footer>
+            </>
+          ) : (
+            <></>
+          )}
+
+          <div style={{ height: "20vh" }}></div>
         </div>
       </div>
     </>
@@ -178,8 +277,9 @@ const BagItems = ({ bagItems, addNewItemToBag, removeItem }) => {
 };
 
 const mapStateToProps = (state) => {
+  const { screenWidth } = state.site;
   const { bagItems } = state.bag;
-  return { bagItems };
+  return { bagItems, screenWidth };
 };
 
 const mapDispatchToProps = (dispatch) => {

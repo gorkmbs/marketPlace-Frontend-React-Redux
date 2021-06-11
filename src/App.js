@@ -19,6 +19,8 @@ import HomeGeneral from "./components/HomeGeneral";
 import AddProduct from "./components/AddProduct";
 import AddCategory from "./components/AddCategory";
 import BagItems from "./components/BagItems";
+import CategoryProduct from "./components/CategoryProduct";
+import ProductPage from "./components/ProductPage";
 
 const rootReducer = combineReducers({
   site: reducerForSite,
@@ -120,6 +122,12 @@ function App() {
                   </Route>
                   <Route path="/authorization/:id">
                     <Authorization />
+                  </Route>
+                  <Route path="/categories/:category">
+                    <CategoryProduct />
+                  </Route>
+                  <Route path="/product/:id">
+                    <ProductPage />
                   </Route>
                 </Switch>
               </div>

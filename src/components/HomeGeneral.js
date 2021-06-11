@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Carousel } from "react-bootstrap";
 import { connect } from "react-redux";
-import brands from "../assets/brands.jpg";
-import discount from "../assets/discount.jpg";
 import SingleProduct from "./SingleProduct";
-// import { FcNext, FcPrevious } from "react-icons/fc";
-
-// import { IconContext } from "react-icons";
+import { FcNext, FcPrevious } from "react-icons/fc";
+import { AiOutlineArrowDown } from "react-icons/ai";
+import { IconContext } from "react-icons";
 
 import { homeScreenItems } from "../arrayFiles/homeScreenItems";
 import { ALL_PRODUCT_UPDATED } from "../actions/actionsForBag";
@@ -14,30 +13,24 @@ import axios from "axios";
 
 const HomeGeneral = ({
   isBigScreen,
-  login,
+
   allProducts,
   screenWidth,
-  token,
+
   setAllProducts,
   urlServer,
 }) => {
   const [indexForSlide, setIndexForSlide] = useState(0);
-  const [smallerPage, setSmallerPage] = useState(true);
-  const [productsLoaded, setProductsLoaded] = useState(false);
+  const [indexForProduct, setIndexForProduct] = useState(0);
 
-  const pageSizeChanged = () => {
-    if (window.innerWidth < 930) {
-      setSmallerPage(true);
-    } else {
-      setSmallerPage(false);
-    }
-  };
+  const [productsLoaded, setProductsLoaded] = useState(false);
 
   useEffect(() => {
     if (!productsLoaded) {
       axios({
-        method: "get",
+        method: "post",
         url: urlServer + "/market/all-products",
+        data: { type: "all" },
       })
         .then((response) => {
           if (response.data.success) {
@@ -54,14 +47,18 @@ const HomeGeneral = ({
         });
     }
     // eslint-disable-next-line
-  }, [login, allProducts, token]);
+  }, [allProducts]);
 
-  useEffect(() => {
-    window.addEventListener("resize", pageSizeChanged);
-    return () => {
-      window.removeEventListener("resize", pageSizeChanged);
-    };
-  });
+  // useEffect(() => {
+  //   window.addEventListener("resize", pageSizeChanged);
+  //   return () => {
+  //     window.removeEventListener("resize", pageSizeChanged);
+  //   };
+  // });
+
+  const handleSelectForProduct = (selectedIndex, e) => {
+    setIndexForProduct(selectedIndex);
+  };
 
   const handleSelect = (selectedIndex, e) => {
     setIndexForSlide(selectedIndex);
@@ -70,46 +67,98 @@ const HomeGeneral = ({
   return (
     <>
       <div className="container-fluid m-0 p-0">
-        <div className="d-flex flex-row flex-wrap justify-content-around align-items-center homeTab">
+        <div className="d-flex flex-wrap justify-content-around align-items-center homeTab">
           {isBigScreen ? (
             <>
               <div
-                className={`d-flex justify-content-around align-self-center flex-${
-                  smallerPage ? "row" : "column"
-                } m-0 p-0`}
+                className="d-flex justify-content-center align-self-center m-0 p-4"
+                style={{
+                  width: "450px",
+                  border: "1px",
+                  borderStyle: "solid",
+                  borderColor: "rgba(0,0,0,0.3)",
+                  borderRadius: "100px 100px 20px 20px",
+                }}
               >
-                <img
-                  src={brands}
-                  alt="brands"
-                  className="img img-fluid rounded"
-                  style={{
-                    maxWidth: "250px",
-
-                    boxShadow: "10px 10px 5px rgba(55, 50, 50, 0.3)",
-                  }}
-                />
-                <div style={{ width: "0px", height: "25px" }}></div>
-                <div className="d-flex justify-content-center m-0 p-0">
-                  <img
-                    src={discount}
-                    alt="discount"
-                    className="img img-fluid rounded border border-danger"
-                    style={{
-                      maxWidth: "250px",
-                      boxShadow: "10px 10px 5px rgba(55, 50, 50, 0.3)",
-                    }}
-                  />
-                  <p
-                    className="discountFlicker"
-                    style={{
-                      position: "absolute",
-                      zIndex: "150",
-                      fontSize: "30px",
-                    }}
-                  >
-                    up to 50%
-                  </p>
-                </div>
+                <Carousel
+                  activeIndex={indexForProduct}
+                  onSelect={handleSelectForProduct}
+                  slide={true}
+                  interval={2500}
+                  fade
+                  indicators={true}
+                  variant="dark"
+                  nextLabel=""
+                  nextIcon={
+                    <span>
+                      <IconContext.Provider
+                        value={{
+                          className: "global-class-name border-dark bg-dark",
+                          size: "2em",
+                        }}
+                      >
+                        <FcNext />
+                      </IconContext.Provider>
+                    </span>
+                  }
+                  prevLabel=""
+                  prevIcon={
+                    <span>
+                      <IconContext.Provider
+                        value={{
+                          className: "global-class-name border-dark bg-dark",
+                          size: "2em",
+                        }}
+                      >
+                        <FcPrevious />
+                      </IconContext.Provider>
+                    </span>
+                  }
+                >
+                  {allProducts.map((item, index) => {
+                    return (
+                      <Carousel.Item key={item._id}>
+                        <h3 className="text-center m-2 p-2">{item.title}</h3>
+                        <div
+                          className="d-flex justify-content-center text-center"
+                          style={{ position: "absolute", width: "450px" }}
+                        >
+                          <div className="d-flex justify-content-center text-center">
+                            <h1
+                              className="text-white bg-danger"
+                              style={{
+                                border: "1px",
+                                borderStyle: "solid",
+                                borderColor: "rgba(0,0,0,0)",
+                                borderRadius: "100px",
+                              }}
+                            >
+                              <AiOutlineArrowDown
+                                style={{ transform: "translate(0px, -3px)" }}
+                              />
+                              {item.discountPercent}%
+                            </h1>
+                          </div>
+                        </div>
+                        <div
+                          className="d-flex justify-content-center align-items-center m-0 p-0"
+                          style={{ height: "250px", width: "450px" }}
+                        >
+                          <img
+                            onClick={() => {
+                              // window.location.reload();
+                            }}
+                            key={item._id}
+                            className="img-fluid rounded"
+                            style={{ height: "250px" }}
+                            src={item.productImageUrl}
+                            alt={`${item._id} slide`}
+                          />
+                        </div>
+                      </Carousel.Item>
+                    );
+                  })}
+                </Carousel>
               </div>
             </>
           ) : (
@@ -136,7 +185,6 @@ const HomeGeneral = ({
               fade
               indicators={true}
               variant="dark"
-              indicatorLabels={[1, 2, 3, 4]}
               nextLabel=""
               nextIcon={
                 <span>
@@ -168,15 +216,17 @@ const HomeGeneral = ({
                 return (
                   <Carousel.Item key={item.id}>
                     <div className="container-fluid m-0 p-0">
-                      <img
-                        onClick={() => {
-                          // window.location.reload();
-                        }}
-                        key={item.id}
-                        className="img-fluid rounded"
-                        src={item.img}
-                        alt={`${item.id} slide`}
-                      />
+                      <Link to={`/categories/` + item.header}>
+                        <img
+                          onClick={() => {
+                            // window.location.reload();
+                          }}
+                          key={item.id}
+                          className="img-fluid rounded"
+                          src={item.img}
+                          alt={`${item.id} slide`}
+                        />
+                      </Link>
                     </div>
                   </Carousel.Item>
                 );
@@ -185,32 +235,34 @@ const HomeGeneral = ({
             <div className="d-flex justify-content-around flex-wrap m-1 p-1">
               {homeScreenItems.map((item) => {
                 return (
-                  <button
-                    onMouseOver={() => setIndexForSlide(item.id - 1)}
-                    key={item.id}
-                    className="m-1 p-1"
-                    style={{
-                      color:
-                        item.id - 1 === indexForSlide
-                          ? "rgba(150,255,150,1)"
-                          : "rgba(0,0,0,1)",
-                      borderColor:
-                        item.id - 1 === indexForSlide
-                          ? "rgba(0,0,0,1)"
-                          : "rgba(0,0,0,0.5)",
-                      borderRadius: "15px",
-                      background:
-                        item.id - 1 === indexForSlide
-                          ? "rgba(3, 67, 97,1)"
-                          : "rgba(53,244,244,0.3)",
-                      boxShadow:
-                        item.id - 1 === indexForSlide
-                          ? "5px 7px 5px rgba(55, 50, 50, 0.5)"
-                          : "0px 10px 5px rgba(55, 50, 50, 0)",
-                    }}
-                  >
-                    {item.header}
-                  </button>
+                  <Link to={`/categories/` + item.header} key={item.id}>
+                    <button
+                      onMouseOver={() => setIndexForSlide(item.id - 1)}
+                      key={item.id}
+                      className="m-1 p-1"
+                      style={{
+                        color:
+                          item.id - 1 === indexForSlide
+                            ? "rgba(150,255,150,1)"
+                            : "rgba(0,0,0,1)",
+                        borderColor:
+                          item.id - 1 === indexForSlide
+                            ? "rgba(0,0,0,1)"
+                            : "rgba(0,0,0,0.5)",
+                        borderRadius: "15px",
+                        background:
+                          item.id - 1 === indexForSlide
+                            ? "rgba(3, 67, 97,1)"
+                            : "rgba(53,244,244,0.3)",
+                        boxShadow:
+                          item.id - 1 === indexForSlide
+                            ? "5px 7px 5px rgba(55, 50, 50, 0.5)"
+                            : "0px 10px 5px rgba(55, 50, 50, 0)",
+                      }}
+                    >
+                      {item.header}
+                    </button>
+                  </Link>
                 );
               })}
             </div>
@@ -231,9 +283,9 @@ const HomeGeneral = ({
 };
 
 const mapStateToProps = (state) => {
-  const { isBigScreen, login, token, urlServer, screenWidth } = state.site;
+  const { isBigScreen, urlServer, screenWidth } = state.site;
   const { allProducts } = state.bag;
-  return { isBigScreen, allProducts, login, token, urlServer, screenWidth };
+  return { isBigScreen, allProducts, urlServer, screenWidth };
 };
 
 const mapDispatchToProps = (dispatch) => {

@@ -265,7 +265,14 @@ const SingleProduct = ({
         }}
       >
         <div className="d-flex justify-content-between flex-wrap m-1 p-1">
-          <h6 className="text-white bg-success m-0 p-1">{category.category}</h6>
+          <Link
+            to={`/categories/` + category.category}
+            className="linkWithoutBlueLine"
+          >
+            <h6 className="text-white bg-success m-0 p-1">
+              {category.category}
+            </h6>
+          </Link>
           <h6 className="text-white bg-dark m-0 p-1">
             {subCategory.subCategory}
           </h6>

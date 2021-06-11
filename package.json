@@ -1,6 +1,8 @@
 {
   "name": "market-tamzirtapoz",
-  "version": "0.3.7",
+  "version": "0.4.13",
+  "description": "Market place for tamzirtapoz page (e-commerce)",
+  "author": "@tamzirtapoz Görkem Buğra Saraç",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.12.0",

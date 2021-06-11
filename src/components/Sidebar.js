@@ -29,6 +29,13 @@ const Sidebar = ({
   const handleOpenSideBar = () => {
     setShowSideBar(!showSideBar);
   };
+
+  const selectHandler = () => {
+    setTimeout(() => {
+      setShowSideBar(false);
+    }, 50);
+  };
+
   const handleToggleSideBar = (value) => {
     setToggleSideBar(value);
     setShowSideBar(false);
@@ -43,7 +50,7 @@ const Sidebar = ({
             onClick={() => setShowSideBar(false)}
             style={{
               position: "absolute",
-              zIndex: "1500",
+              zIndex: "3500",
               transform: "translate(200px,25px)",
               marginTop: isBigScreen
                 ? "0"
@@ -72,6 +79,7 @@ const Sidebar = ({
         style={{
           maxHeight: "90vh",
           height: "550px",
+          zIndex: "2500",
           marginTop: isBigScreen
             ? "0"
             : window.innerHeight > 700
@@ -148,6 +156,9 @@ const Sidebar = ({
         <SidebarContent>
           <Menu iconShape="circle">
             <MenuItem
+              onClick={() => {
+                selectHandler();
+              }}
               icon={
                 <IconContext.Provider
                   value={{
@@ -160,10 +171,13 @@ const Sidebar = ({
               }
               suffix={<span className="badge red">Fast</span>}
             >
-              Food
+              <Link to="/categories/food">Food</Link>
             </MenuItem>
             <MenuItem
               suffix={<span className="badge yellow">50%</span>}
+              onClick={() => {
+                selectHandler();
+              }}
               icon={
                 <IconContext.Provider
                   value={{
@@ -175,8 +189,9 @@ const Sidebar = ({
                 </IconContext.Provider>
               }
             >
-              Clothes
+              <Link to="/categories/clothes">Clothes</Link>
             </MenuItem>
+
             <SubMenu
               prefix={<span className="badge gray">New</span>}
               title="Technology"
@@ -191,9 +206,16 @@ const Sidebar = ({
                 </IconContext.Provider>
               }
             >
-              <MenuItem>Computers</MenuItem>
-              <MenuItem>Mobile Phones</MenuItem>
-              <MenuItem>Gaming</MenuItem>
+              <Link
+                to="/categories/technology"
+                onClick={() => {
+                  selectHandler();
+                }}
+              >
+                <MenuItem>Computers</MenuItem>
+                <MenuItem>Mobile Phones</MenuItem>
+                <MenuItem>Gaming</MenuItem>
+              </Link>
             </SubMenu>
             <SubMenu
               title="Pet"
@@ -208,10 +230,17 @@ const Sidebar = ({
                 </IconContext.Provider>
               }
             >
-              <MenuItem>Cats</MenuItem>
-              <MenuItem>Dogs</MenuItem>
-              <MenuItem>Birds</MenuItem>
-              <MenuItem>Fish</MenuItem>
+              <Link
+                to="/categories/pet"
+                onClick={() => {
+                  selectHandler();
+                }}
+              >
+                <MenuItem>Cats</MenuItem>
+                <MenuItem>Dogs</MenuItem>
+                <MenuItem>Birds</MenuItem>
+                <MenuItem>Fish</MenuItem>
+              </Link>
             </SubMenu>
           </Menu>
         </SidebarContent>
