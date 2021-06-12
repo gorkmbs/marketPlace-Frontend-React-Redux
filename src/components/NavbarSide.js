@@ -17,6 +17,8 @@ import {
   USER_ID_CHANGED,
 } from "../actions/actionsForSite";
 
+import { NEW_ITEM_ADDED_TO_BAG } from "../actions/actionsForBag";
+
 const Cookie = require("js-cookie");
 const axios = require("axios");
 
@@ -29,6 +31,7 @@ const NavbarSide = ({
   setShopName,
   id,
   bagItems,
+  addNewItemToBag,
   setId,
   tamzirtapozServer,
   admin,
@@ -39,9 +42,61 @@ const NavbarSide = ({
   setColor,
   setToken,
   setUsername,
+  finishButton,
 }) => {
   const [openBagEmptyModal, setOpenBagEmptyModal] = useState(false);
   const [openBagPage, setOpenBagPage] = useState(false);
+  const [refreshBagWithServer, setRefreshBagWithServer] = useState(false);
+  const [connectionWait, setConnectionWait] = useState(false);
+  const [takenFromServer, setTakenFromServer] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setRefreshBagWithServer(!refreshBagWithServer);
+    }, 25000);
+  }, [refreshBagWithServer]);
+
+  useEffect(() => {
+    let sendingItems = bagItems.map((item) => {
+      let itemS = { _id: item.item._id, count: item.count };
+      return { ...itemS };
+    });
+
+    if (token !== "" && !connectionWait) {
+      setConnectionWait(true);
+      axios({
+        method: "post",
+        url: urlServer + "/market/current-bag",
+        headers: { Authorization: token },
+        data: { sendingItems, takenFromServer },
+      })
+        .then((response) => {
+          setConnectionWait(false);
+          if (response.data.success === true) {
+            setTakenFromServer(true);
+            for (let i = 0; i < response.data.bag.length; i++) {
+              if (
+                String(bagItems[i]?.item?._id) ===
+                response.data.bag[i]?.productId?._id
+              ) {
+              } else {
+                addNewItemToBag(
+                  response.data.bag[i].productId,
+                  response.data.bag[i].count
+                );
+              }
+            }
+          }
+        })
+        .catch((err) => {
+          setConnectionWait(false);
+
+          console.log(err);
+        });
+    }
+
+    // eslint-disable-next-line
+  }, [refreshBagWithServer, bagItems, token, finishButton]);
 
   const handleOpenBag = (e) => {
     e.preventDefault();
@@ -395,9 +450,10 @@ const mapStateToProps = (store) => {
     id,
     color,
   } = store.site;
-  const { bagItems } = store.bag;
+  const { bagItems, finishButton } = store.bag;
   return {
     isBigScreen,
+    finishButton,
     toggleSideBar,
     admin,
     tamzirtapozServer,
@@ -426,6 +482,15 @@ const mapDispatchToProps = (dispatch) => {
       dispatch({ type: ADMIN_STATUS_CHANGED, payload: { admin } }),
     setShopName: (shopName) =>
       dispatch({ type: USER_SHOPNAME_CHANGED, payload: { shopName } }),
+    addNewItemToBag: (item, count) => {
+      dispatch({
+        type: NEW_ITEM_ADDED_TO_BAG,
+        payload: {
+          item,
+          count,
+        },
+      });
+    },
   };
 };
 

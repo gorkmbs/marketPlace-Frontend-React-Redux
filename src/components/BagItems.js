@@ -2,13 +2,20 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import {
+  FINISH_BUTTON_CLICKED,
   NEW_ITEM_ADDED_TO_BAG,
   REMOVE_ITEM_FROM_BAG,
 } from "../actions/actionsForBag";
 import { GiShoppingCart } from "react-icons/gi";
 import { IconContext } from "react-icons";
 
-const BagItems = ({ bagItems, addNewItemToBag, removeItem, screenWidth }) => {
+const BagItems = ({
+  bagItems,
+  addNewItemToBag,
+  removeItem,
+  screenWidth,
+  clickFinishButton,
+}) => {
   const [pageUpped, setPageUpped] = useState(false);
 
   // eslint-disable-next-line
@@ -253,7 +260,13 @@ const BagItems = ({ bagItems, addNewItemToBag, removeItem, screenWidth }) => {
                       borderRadius: "20px 80px 80px 20px",
                     }}
                   >
-                    <Link to="/finish-shopping" className="linkWithoutBlueLine">
+                    <Link
+                      to="/finish-shopping"
+                      className="linkWithoutBlueLine"
+                      onClick={() => {
+                        clickFinishButton();
+                      }}
+                    >
                       <p
                         className="m-1 p-1 text-center"
                         style={{ fontSize: screenWidth < 769 ? "20px" : "4vw" }}
@@ -284,6 +297,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    clickFinishButton: () => {
+      dispatch({ type: FINISH_BUTTON_CLICKED });
+    },
     addNewItemToBag: (item, count) => {
       dispatch({
         type: NEW_ITEM_ADDED_TO_BAG,
