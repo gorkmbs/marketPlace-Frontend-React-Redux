@@ -21,6 +21,7 @@ import AddCategory from "./components/AddCategory";
 import BagItems from "./components/BagItems";
 import CategoryProduct from "./components/CategoryProduct";
 import ProductPage from "./components/ProductPage";
+import FinishPayment from "./components/FinishPayment";
 
 const rootReducer = combineReducers({
   site: reducerForSite,
@@ -128,6 +129,9 @@ function App() {
                   </Route>
                   <Route path="/product/:id">
                     <ProductPage />
+                  </Route>
+                  <Route path="/finish-shopping">
+                    <FinishPayment />
                   </Route>
                 </Switch>
               </div>
