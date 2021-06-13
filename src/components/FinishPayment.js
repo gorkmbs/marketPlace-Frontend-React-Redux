@@ -51,8 +51,8 @@ const FinishPayment = ({
               setSuccessPayment(true);
 
               setTimeout(() => {
-                setModalShow(false);
                 clearBag();
+                setModalShow(false);
               }, 3000);
             } else {
               setProcessingText(response.data.msg);
