@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 import { GiShoppingCart } from "react-icons/gi";
 import { MdCloudDone } from "react-icons/md";
 import { IconContext } from "react-icons";
@@ -48,9 +49,10 @@ const FinishPayment = ({
               playPaymentDone();
               setProcessingText(response.data.msg);
               setSuccessPayment(true);
-              clearBag();
+
               setTimeout(() => {
                 setModalShow(false);
+                clearBag();
               }, 3000);
             } else {
               setProcessingText(response.data.msg);
@@ -74,6 +76,13 @@ const FinishPayment = ({
 
   return (
     <>
+      {bagItems.length === 0 ? (
+        <>
+          <Redirect to="/" />
+        </>
+      ) : (
+        <></>
+      )}
       <div
         className="d-flex justify-content-center"
         style={{ background: "rgba(0,255,0,0.2)" }}
