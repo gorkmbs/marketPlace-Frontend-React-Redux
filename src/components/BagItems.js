@@ -8,6 +8,10 @@ import {
 } from "../actions/actionsForBag";
 import { GiShoppingCart } from "react-icons/gi";
 import { IconContext } from "react-icons";
+import useSound from "use-sound";
+
+import coin from "../soundEffects/coin.mp3";
+import removeEffect from "../soundEffects/removeEffect.mp3";
 
 const BagItems = ({
   bagItems,
@@ -17,6 +21,8 @@ const BagItems = ({
   clickFinishButton,
 }) => {
   const [pageUpped, setPageUpped] = useState(false);
+  const [playCoin] = useSound(coin);
+  const [playRemoveEffect] = useSound(removeEffect);
 
   // eslint-disable-next-line
   useEffect(() => {
@@ -163,6 +169,7 @@ const BagItems = ({
                                   className="btn btn-danger"
                                   onClick={(e) => {
                                     e.preventDefault();
+                                    playRemoveEffect();
                                     removeItem(item.item._id);
                                   }}
                                 >
@@ -264,6 +271,7 @@ const BagItems = ({
                       to="/finish-shopping"
                       className="linkWithoutBlueLine"
                       onClick={() => {
+                        playCoin();
                         clickFinishButton();
                       }}
                     >

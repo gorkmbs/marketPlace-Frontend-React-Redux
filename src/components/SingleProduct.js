@@ -5,6 +5,10 @@ import { NEW_ITEM_ADDED_TO_BAG } from "../actions/actionsForBag";
 import { Modal, Button } from "react-bootstrap";
 import { GiShoppingCart } from "react-icons/gi";
 import { IconContext } from "react-icons";
+import useSound from "use-sound";
+
+import pageFlip from "../soundEffects/pageFlip.mp3";
+import doneEffect from "../soundEffects/doneEffect.mp3";
 
 const SingleProduct = ({
   category,
@@ -25,6 +29,8 @@ const SingleProduct = ({
 }) => {
   const [modalShow, setModalShow] = useState(false);
   const [itemCount, setItemCount] = useState(1);
+  const [playPageFlip] = useSound(pageFlip);
+  const [playDoneEffect] = useSound(doneEffect);
 
   const countChanger = (e, task) => {
     e.preventDefault();
@@ -196,6 +202,7 @@ const SingleProduct = ({
               <Button
                 className="text-capitalize"
                 onClick={(e) => {
+                  playDoneEffect();
                   handleAddToBag(e);
                 }}
               >
@@ -311,6 +318,7 @@ const SingleProduct = ({
         <button
           className="btn btn-success text-capitalize"
           onClick={(e) => {
+            playPageFlip();
             addRequest(e);
           }}
         >

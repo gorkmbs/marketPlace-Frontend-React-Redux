@@ -6,6 +6,9 @@ import { IconContext } from "react-icons";
 import { BsInfoCircle } from "react-icons/bs";
 import { Modal } from "react-bootstrap";
 import { CLEAR_BAG } from "../actions/actionsForBag";
+import useSound from "use-sound";
+
+import paymentDone from "../soundEffects/paymentDone.mp3";
 const axios = require("axios");
 
 const FinishPayment = ({
@@ -18,6 +21,7 @@ const FinishPayment = ({
   const [modalShow, setModalShow] = useState(false);
   const [processingText, setProcessingText] = useState("Connecting to Bank");
   const [successPayment, setSuccessPayment] = useState(false);
+  const [playPaymentDone] = useSound(paymentDone);
 
   useEffect(() => {
     if (modalShow === true) {
@@ -41,6 +45,7 @@ const FinishPayment = ({
         })
           .then((response) => {
             if (response.data.success === true) {
+              playPaymentDone();
               setProcessingText(response.data.msg);
               setSuccessPayment(true);
               clearBag();
