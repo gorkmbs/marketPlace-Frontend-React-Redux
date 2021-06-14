@@ -169,8 +169,8 @@ const FinishPayment = ({
               <BsInfoCircle style={{ fontSize: "50px", color: "red" }} />
             </div>
             <p className="text-dark">
-              Because of being this site is not a real e-commerce site, we don't
-              take your adress and credit-card number. Please do not share these
+              Because this site is not a real e-commerce site, we don't take
+              your adress and credit-card number. Please do not share these
               information with anyone else in this site.
             </p>
           </div>
