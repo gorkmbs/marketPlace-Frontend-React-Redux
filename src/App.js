@@ -154,7 +154,7 @@ function App() {
         >
           <Modal.Header className="bg-success">
             <Modal.Title>
-              <span className="text-light">Welcome to Market {":)"}</span>
+              <span className="text-light">Welcome to the Market {":)"}</span>
             </Modal.Title>
             <button
               className="btn btn-success m-0 p-0"
