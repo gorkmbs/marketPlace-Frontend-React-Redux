@@ -91,7 +91,7 @@ const FinishPayment = ({
           className="m-4 p-4"
           style={{ background: "rgba(255,255,255,0.8)" }}
         >
-          <h1>Payment and Finishing</h1>
+          <h1>Payment</h1>
           <h6>Products</h6>
           {bagItems.length === 0 ? (
             <>
