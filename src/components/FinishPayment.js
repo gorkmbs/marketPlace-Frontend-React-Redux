@@ -171,7 +171,7 @@ const FinishPayment = ({
             <p className="text-dark">
               Because this site is not a real e-commerce site, we don't take
               your adress and credit-card number. Please do not share this
-              information with anyone else in this site.
+              information with anyone else on this site.
             </p>
           </div>
         </div>
