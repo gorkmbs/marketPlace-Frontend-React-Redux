@@ -163,7 +163,7 @@ function App() {
               X
             </button>
           </Modal.Header>
-          <Modal.Body>you can buy anything that you want !</Modal.Body>
+          <Modal.Body>you can buy anything you want !</Modal.Body>
           <Modal.Footer>
             <Button
               variant="primary"
