@@ -115,46 +115,53 @@ const HomeGeneral = ({
                     </span>
                   }
                 >
-                  {allProducts.map((item, index) => {
+                  {allProducts.map((item) => {
                     return (
                       <Carousel.Item key={item._id}>
-                        <h3 className="text-center m-2 p-2">{item.title}</h3>
-                        <div
-                          className="d-flex justify-content-center text-center"
-                          style={{ position: "absolute", width: "450px" }}
+                        <Link
+                          to={`/product/${item._id}`}
+                          className="linkWithoutBlueLine"
                         >
-                          <div className="d-flex justify-content-center text-center">
-                            <h1
-                              className="text-white bg-danger"
-                              style={{
-                                border: "1px",
-                                borderStyle: "solid",
-                                borderColor: "rgba(0,0,0,0)",
-                                borderRadius: "100px",
-                              }}
-                            >
-                              <AiOutlineArrowDown
-                                style={{ transform: "translate(0px, -3px)" }}
-                              />
-                              {item.discountPercent}%
-                            </h1>
+                          <h3 className="text-center m-2 p-2 text-dark">
+                            {item.title}
+                          </h3>
+                          <div
+                            className="d-flex justify-content-center text-center"
+                            style={{ position: "absolute", width: "450px" }}
+                          >
+                            <div className="d-flex justify-content-center text-center">
+                              <h1
+                                className="text-white bg-danger"
+                                style={{
+                                  border: "1px",
+                                  borderStyle: "solid",
+                                  borderColor: "rgba(0,0,0,0)",
+                                  borderRadius: "100px",
+                                }}
+                              >
+                                <AiOutlineArrowDown
+                                  style={{ transform: "translate(0px, -3px)" }}
+                                />
+                                {item.discountPercent}%
+                              </h1>
+                            </div>
                           </div>
-                        </div>
-                        <div
-                          className="d-flex justify-content-center align-items-center m-0 p-0"
-                          style={{ height: "250px", width: "450px" }}
-                        >
-                          <img
-                            onClick={() => {
-                              // window.location.reload();
-                            }}
-                            key={item._id}
-                            className="img-fluid rounded"
-                            style={{ height: "250px" }}
-                            src={item.productImageUrl}
-                            alt={`${item._id} slide`}
-                          />
-                        </div>
+                          <div
+                            className="d-flex justify-content-center align-items-center m-0 p-0"
+                            style={{ height: "250px", width: "450px" }}
+                          >
+                            <img
+                              onClick={() => {
+                                // window.location.reload();
+                              }}
+                              key={item._id}
+                              className="img-fluid rounded"
+                              style={{ height: "250px" }}
+                              src={item.productImageUrl}
+                              alt={`${item._id} slide`}
+                            />
+                          </div>
+                        </Link>
                       </Carousel.Item>
                     );
                   })}

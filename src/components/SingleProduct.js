@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import { NEW_ITEM_ADDED_TO_BAG } from "../actions/actionsForBag";
 import { Modal, Button } from "react-bootstrap";
 import { GiShoppingCart } from "react-icons/gi";
@@ -11,6 +11,11 @@ import pageFlip from "../soundEffects/pageFlip.mp3";
 import doneEffect from "../soundEffects/doneEffect.mp3";
 
 const SingleProduct = ({
+  specifications,
+  warranty,
+  warrantyExplanation,
+  date,
+  shopId,
   category,
   _id,
   subCategory,
@@ -71,6 +76,11 @@ const SingleProduct = ({
     e.preventDefault();
     addNewItemToBag(
       {
+        specifications,
+        warranty,
+        warrantyExplanation,
+        date,
+        shopId,
         category,
         _id,
         subCategory,
@@ -284,37 +294,39 @@ const SingleProduct = ({
             {subCategory.subCategory}
           </h6>
         </div>
-        <p
-          className="m-0 p-1 bg-danger text-white"
-          style={{ position: "absolute" }}
-        >
-          {discountPercent}%
-        </p>
-        <img
-          src={productImageUrl}
-          alt="Product"
-          className="img img-fluid rounded"
-          style={{ border: "5px dotted rgba(100,100,0,0.3)" }}
-        />
-
-        <h4 className="text-primary m-1 p-1">{title}</h4>
-        <h6 className="text-dark m-0 p-0">{definition}</h6>
-        <h3 className="text-dark m-0 p-1">
-          <span
-            className="font-weight-light"
-            style={{
-              textDecoration: "line-through",
-              color: "rgba(255,50,50,0.8)",
-            }}
+        <Link to={`/product/${_id}`} className="linkWithoutBlueLine">
+          <p
+            className="m-0 p-1 bg-danger text-white"
+            style={{ position: "absolute" }}
           >
-            ${price},{priceDecimal}
-          </span>
-          <span className="text-success font-weight-bold">{` $${(
-            ((Number(price) * 100 + Number(priceDecimal)) *
-              ((100 - Number(discountPercent)) / 100)) /
-            100
-          ).toFixed(2)}`}</span>
-        </h3>
+            {discountPercent}%
+          </p>
+          <img
+            src={productImageUrl}
+            alt="Product"
+            className="img img-fluid rounded"
+            style={{ border: "5px dotted rgba(100,100,0,0.3)" }}
+          />
+
+          <h4 className="text-primary m-1 p-1">{title}</h4>
+          <h6 className="text-dark m-0 p-0">{definition}</h6>
+          <h3 className="text-dark m-0 p-1">
+            <span
+              className="font-weight-light"
+              style={{
+                textDecoration: "line-through",
+                color: "rgba(255,50,50,0.8)",
+              }}
+            >
+              ${price},{priceDecimal}
+            </span>
+            <span className="text-success font-weight-bold">{` $${(
+              ((Number(price) * 100 + Number(priceDecimal)) *
+                ((100 - Number(discountPercent)) / 100)) /
+              100
+            ).toFixed(2)}`}</span>
+          </h3>
+        </Link>
         <button
           className="btn btn-success text-capitalize"
           onClick={(e) => {

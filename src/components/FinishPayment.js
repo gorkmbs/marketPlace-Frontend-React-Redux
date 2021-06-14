@@ -36,7 +36,7 @@ const FinishPayment = ({
         setProcessingText(processingText + "...");
       }, 3000);
       setTimeout(() => {
-        setProcessingText("Connected to Bank");
+        setProcessingText("Taking Payment");
       }, 4000);
       setTimeout(() => {
         axios({

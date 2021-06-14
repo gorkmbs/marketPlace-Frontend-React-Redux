@@ -244,11 +244,11 @@ const NavbarSide = ({
         )}
 
         <div className="navbar p-0 m-0 d-flex">
-          <a href={tamzirtapozServer} className="m-0 p-0  linkWithoutBlueLine">
+          <Link to="/" className="m-0 p-0  linkWithoutBlueLine">
             <h1 className="navbar-brand pl-1 shadow-lg p-1 mb-1 navTextColor rounded">
-              ™zirt@poz
+              MARKET
             </h1>
-          </a>
+          </Link>
         </div>
 
         <div className="d-flex align-items-center p-0 m-0">
@@ -365,9 +365,9 @@ const NavbarSide = ({
                       <></>
                     )}
                     <Dropdown.Item eventKey="4" as="div">
-                      <Link to={`/lottery`} className="linkWithoutBlueLine">
+                      <Link to={`/old-buyings`} className="linkWithoutBlueLine">
                         <div className="bg-dark p-0 m-0 d-flex justify-content-center">
-                          Lottery
+                          Old Buyings
                         </div>
                       </Link>
                     </Dropdown.Item>
