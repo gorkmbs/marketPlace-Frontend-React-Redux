@@ -365,9 +365,12 @@ const NavbarSide = ({
                       <></>
                     )}
                     <Dropdown.Item eventKey="4" as="div">
-                      <Link to={`/old-buyings`} className="linkWithoutBlueLine">
+                      <Link
+                        to={`/old-purchases`}
+                        className="linkWithoutBlueLine"
+                      >
                         <div className="bg-dark p-0 m-0 d-flex justify-content-center">
-                          Old Buyings
+                          Old Purchases
                         </div>
                       </Link>
                     </Dropdown.Item>

@@ -101,9 +101,9 @@ const FinishPayment = ({
             <></>
           )}
           <ol>
-            {bagItems.map((item) => {
+            {bagItems.map((item, index) => {
               return (
-                <li>
+                <li key={index}>
                   {item.item.title}, count: {item.count}
                 </li>
               );

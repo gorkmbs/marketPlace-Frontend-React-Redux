@@ -22,7 +22,7 @@ import BagItems from "./components/BagItems";
 import CategoryProduct from "./components/CategoryProduct";
 import ProductPage from "./components/ProductPage";
 import FinishPayment from "./components/FinishPayment";
-import OldBuyings from "./components/OldBuyings";
+import OldPurchases from "./components/OldPurchases";
 
 const rootReducer = combineReducers({
   site: reducerForSite,
@@ -134,8 +134,8 @@ function App() {
                   <Route path="/finish-shopping">
                     <FinishPayment />
                   </Route>
-                  <Route path="/old-buyings">
-                    <OldBuyings />
+                  <Route path="/old-purchases">
+                    <OldPurchases />
                   </Route>
                 </Switch>
               </div>
