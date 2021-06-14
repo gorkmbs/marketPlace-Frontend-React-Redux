@@ -163,7 +163,7 @@ function App() {
               X
             </button>
           </Modal.Header>
-          <Modal.Body>I love you honey :)</Modal.Body>
+          <Modal.Body>You can buy anything you want !</Modal.Body>
           <Modal.Footer>
             <Button
               variant="primary"
