@@ -24,6 +24,8 @@ import ProductPage from "./components/ProductPage";
 import FinishPayment from "./components/FinishPayment";
 import OldPurchases from "./components/OldPurchases";
 
+const axios = require("axios");
+
 const rootReducer = combineReducers({
   site: reducerForSite,
   bag: reducerForBag,
@@ -31,8 +33,27 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer);
 
 function App() {
+  // Hello to backend server for wake up
+  const [saidHelloBackend, setSaidHelloBackend] = useState(false); // true for implementation false for deploy
+
   const [pageYOffset, setPageYOffset] = useState("0px");
   const [welcomeMessage, setWelcomeMessage] = useState(true);
+
+  useEffect(() => {
+    if (!saidHelloBackend) {
+      axios({
+        method: "post",
+        url: store.getState().site.urlServer + "/users/hello-backend",
+        data: { siteName: "Market Tamzirtapoz" },
+      })
+        .then(() => {
+          setSaidHelloBackend(true);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [saidHelloBackend]);
 
   const scrolledPage = () => {
     store.dispatch({
