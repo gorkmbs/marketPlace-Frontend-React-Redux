@@ -9,6 +9,8 @@ import {
 import { VscLoading } from "react-icons/vsc";
 import { GiShoppingCart } from "react-icons/gi";
 import { AiOutlineArrowDown } from "react-icons/ai";
+import { BsFillStarFill } from "react-icons/bs";
+import { BsStar } from "react-icons/bs";
 import { IconContext } from "react-icons";
 import pageFlip from "../soundEffects/pageFlip.mp3";
 import doneEffect from "../soundEffects/doneEffect.mp3";
@@ -16,6 +18,35 @@ import SingleProduct from "./SingleProduct";
 import useSound from "use-sound";
 
 const axios = require("axios");
+const Joi = require("joi");
+// const _ = require("lodash");
+
+const passedTimeCalculator = (postDate) => {
+  let passedTime = Date.now() - postDate;
+  passedTime /= 1000;
+  let returnValue = "";
+  let plural = false;
+  if (passedTime < 60) {
+    return (returnValue = `now`);
+  } else if (passedTime < 3600) {
+    returnValue = `${Math.floor(passedTime / 60)} min`;
+    plural = Math.floor(passedTime / 60) > 1 ? true : false;
+  } else if (passedTime < 86400) {
+    returnValue = `${Math.floor(passedTime / 3600)} hour`;
+    plural = Math.floor(passedTime / 3600) > 1 ? true : false;
+  } else if (passedTime < 604800) {
+    returnValue = `${Math.floor(passedTime / 86400)} day`;
+    plural = Math.floor(passedTime / 86400) > 1 ? true : false;
+  } else if (passedTime < 2592000) {
+    returnValue = `${Math.floor(passedTime / 604800)} week`;
+    plural = Math.floor(passedTime / 604800) > 1 ? true : false;
+  } else {
+    returnValue = `${Math.floor(passedTime / 2592000)} month`;
+    plural = Math.floor(passedTime / 2592000) > 1 ? true : false;
+  }
+  // eslint-disable-next-line
+  return returnValue + `${plural ? "s" : ""}` + ` ago`;
+};
 
 const ProductPage = ({
   urlServer,
@@ -25,6 +56,7 @@ const ProductPage = ({
   setAllProducts,
   screenWidth,
   login,
+  token,
   bagItems,
 }) => {
   const { id } = useParams();
@@ -32,9 +64,66 @@ const ProductPage = ({
   const [loadingData, setLoadingData] = useState(true);
 
   const [modalShow, setModalShow] = useState(false);
+  const [showMakeCommentModal, setShowMakeCommentModal] = useState(false);
+  const [showAllCommentsModal, setShowAllCommentsModal] = useState(false);
+  const [averageLike, setAverageLike] = useState(0);
   const [itemCount, setItemCount] = useState(1);
+  const [commentParagraph, setCommentParagraph] = useState("");
+  const [isValidCommentParagraph, setIsValidCommentParagraph] = useState(false);
+  const [refreshProductDetails, setRefreshProductDetails] = useState(false);
+  const [isValidCommentParagraphError, setIsValidCommentParagraphError] =
+    useState("");
+  const [commentLikeVote, setCommentLikeVote] = useState(3);
   const [playPageFlip] = useSound(pageFlip);
   const [playDoneEffect] = useSound(doneEffect);
+
+  const handleSendComment = () => {
+    axios({
+      method: "post",
+      url: urlServer + "/market/add-new-vote",
+      data: { idProduct: id, comment: commentParagraph, star: commentLikeVote },
+      headers: { Authorization: token },
+    })
+      .then((response) => {
+        if (response.data.success === true) {
+          setShowMakeCommentModal(false);
+          setCommentParagraph("");
+          setIsValidCommentParagraph(false);
+          setIsValidCommentParagraphError("");
+          setCommentLikeVote(3);
+          setRefreshProductDetails(!refreshProductDetails);
+        } else {
+          setIsValidCommentParagraph(false);
+          setIsValidCommentParagraphError(
+            "An unexpected error occured. Please try again later !"
+          );
+        }
+      })
+      .catch((err) => {
+        setIsValidCommentParagraph(false);
+        setIsValidCommentParagraphError(
+          "An unexpected error occured from server. Please try again later !"
+        );
+      });
+  };
+
+  useEffect(() => {
+    const schema = Joi.object({
+      comment: Joi.string().trim().required().min(5).max(1500),
+    });
+
+    const checker = {
+      comment: commentParagraph,
+    };
+
+    const validation = schema.validate(checker);
+    if (validation.error) {
+      setIsValidCommentParagraph(false);
+      setIsValidCommentParagraphError(validation.error.details[0].message);
+    } else {
+      setIsValidCommentParagraph(true);
+    }
+  }, [commentParagraph]);
 
   useEffect(() => {
     setLoadingData(true);
@@ -44,10 +133,18 @@ const ProductPage = ({
     })
       .then((response) => {
         if (response.data.success === true) {
-          setDataProduct(response.data.product);
+          setDataProduct(response.data.newProduct);
+          let count = 0;
+          for (let i = 0; i < response.data.newProduct.votes.length; i++) {
+            count +=
+              response.data.newProduct.votes[i].star /
+              response.data.newProduct.votes.length;
+          }
+          count = Math.ceil(Math.round(count));
+          setAverageLike(count);
           setTimeout(() => {
             setLoadingData(false);
-          }, 250);
+          }, 150);
         } else {
           window.alert("an error occured, please try again later");
         }
@@ -57,7 +154,7 @@ const ProductPage = ({
         window.alert("an error occured, please try again later");
       });
     // eslint-disable-next-line
-  }, [id]);
+  }, [id, refreshProductDetails]);
 
   useEffect(() => {
     if (!loadingData) {
@@ -212,11 +309,53 @@ const ProductPage = ({
                       style={{ maxWidth: "350px" }}
                     />
                   </div>
-
                   <div className=" m-0 p-0">
                     <h4 className="text-primary">
                       Shop: {dataProduct.shopId.shopName}
                     </h4>
+                    <div className="m-0 p-0">
+                      {dataProduct.votes.length === 0 ? (
+                        <>
+                          {[...Array(5)].map((item) => {
+                            return (
+                              <BsStar className="text-warning" key={item} />
+                            );
+                          })}
+                        </>
+                      ) : (
+                        <>
+                          {[...Array(averageLike)].map((item, i) => {
+                            return (
+                              <BsFillStarFill
+                                className="text-warning"
+                                key={i}
+                              />
+                            );
+                          })}
+                          {[...Array(5 - averageLike)].map((item, i) => {
+                            return <BsStar className="text-warning" key={i} />;
+                          })}
+                        </>
+                      )}
+                    </div>
+                    <button
+                      className="btn text-primary m-0 p-0"
+                      disabled={dataProduct.votes.length === 0 ? true : false}
+                      onClick={() => {
+                        setShowAllCommentsModal(true);
+                      }}
+                    >
+                      See Comments ({`${dataProduct.votes.length}`})
+                    </button>{" "}
+                    -{" "}
+                    <button
+                      className="btn btn-link m-0 p-0"
+                      onClick={() => {
+                        setShowMakeCommentModal(true);
+                      }}
+                    >
+                      Make a comment
+                    </button>
                     <p>Stock: {dataProduct.stockCount}</p>
                     <p>{dataProduct.definition}.</p>
                     <ul>
@@ -468,6 +607,162 @@ const ProductPage = ({
           </Modal>
         </>
       )}
+      <Modal
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        show={showMakeCommentModal}
+        style={{ background: "rgba(0,255,50,0.3)" }}
+        onHide={() => {
+          setShowMakeCommentModal(false);
+        }}
+        centered
+      >
+        {login ? (
+          <>
+            <Modal.Header closeButton closeLabel="">
+              <Modal.Title id="contained-modal-title-vcenter">
+                Make a Comment
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <label htmlFor="starVotes">Give Star</label>
+              <div id="starVotes d-flex justify-content-start">
+                {[...Array(commentLikeVote)].map((item, index) => {
+                  return (
+                    <div
+                      class="btn m-3 p-0"
+                      key={index}
+                      onClick={() => {
+                        setCommentLikeVote(index + 1);
+                      }}
+                    >
+                      <BsFillStarFill className="text-warning" />
+                    </div>
+                  );
+                })}
+                {[...Array(5 - commentLikeVote)].map((item, index) => {
+                  return (
+                    <div
+                      class="btn m-3 p-0"
+                      key={index}
+                      onClick={() => {
+                        setCommentLikeVote(index + 1 + commentLikeVote);
+                      }}
+                    >
+                      <BsStar className="text-warning" />
+                    </div>
+                  );
+                })}
+              </div>
+              <br />
+              <div className="form-group">
+                <label htmlFor="paragraph">Your Comment</label>
+
+                <textarea
+                  type="text"
+                  className="form-control"
+                  id="paragraph"
+                  placeholder="What do you want to tell other users about
+                      this product?"
+                  value={commentParagraph}
+                  onChange={(e) => setCommentParagraph(e.target.value)}
+                  rows="3"
+                ></textarea>
+                {!isValidCommentParagraph ? (
+                  <>
+                    <p className="text-danger">
+                      {isValidCommentParagraphError}
+                    </p>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant="primary"
+                onClick={handleSendComment}
+                disabled={!isValidCommentParagraph}
+              >
+                Send Comment
+              </Button>
+            </Modal.Footer>
+          </>
+        ) : (
+          <>
+            <Modal.Header closeButton closeLabel="">
+              <Modal.Title id="contained-modal-title-vcenter">
+                Login or register please to make a comment !
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>Registering only takes 1 minute...</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant="warning"
+                onClick={(e) => {
+                  handleLoginOrRegister(e, "register");
+                }}
+              >
+                Register
+              </Button>
+              <Button
+                variant="success"
+                onClick={(e) => {
+                  handleLoginOrRegister(e, "login");
+                }}
+              >
+                Login
+              </Button>
+            </Modal.Footer>
+          </>
+        )}
+      </Modal>
+      <Modal
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        show={showAllCommentsModal}
+        style={{ background: "rgba(0,255,50,0.3)" }}
+        onHide={() => {
+          setShowAllCommentsModal(false);
+        }}
+        centered
+      >
+        <Modal.Header closeButton closeLabel="">
+          <Modal.Title id="contained-modal-title-vcenter">
+            Comments for{" "}
+            <span className="text-primary">{dataProduct.title}</span>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {dataProduct?.votes
+            ?.slice(0)
+            .reverse()
+            .map((item, index) => {
+              return (
+                <div key={index} className="border border-primary p-2">
+                  <div className="text-primary">
+                    {item.idVoter.username}{" "}
+                    {[...Array(item.star)].map((item, i) => {
+                      return (
+                        <BsFillStarFill className="text-warning" key={i} />
+                      );
+                    })}
+                    {[...Array(5 - item.star)].map((item, i) => {
+                      return <BsStar className="text-warning" key={i} />;
+                    })}
+                  </div>
+                  <p className="m-0 p-0">{item.comment}</p>
+                  <small className="m-0 p-0">
+                    {passedTimeCalculator(item.date)}
+                  </small>
+                </div>
+              );
+            })}
+        </Modal.Body>
+      </Modal>
     </>
   );
 };

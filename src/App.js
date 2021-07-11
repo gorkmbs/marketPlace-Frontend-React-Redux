@@ -34,7 +34,9 @@ const store = createStore(rootReducer);
 
 function App() {
   // Hello to backend server for wake up
-  const [saidHelloBackend, setSaidHelloBackend] = useState(false); // true for implementation false for deploy
+  const [saidHelloBackend, setSaidHelloBackend] = useState(
+    store.getState().site.helloToBackend
+  ); // true for implementation false for deploy
 
   const [pageYOffset, setPageYOffset] = useState("0px");
   const [welcomeMessage, setWelcomeMessage] = useState(true);

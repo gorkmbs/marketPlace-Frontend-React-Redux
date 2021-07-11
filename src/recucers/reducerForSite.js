@@ -11,10 +11,19 @@ import {
   SCREEN_WIDTH_CHANGED,
 } from "../actions/actionsForSite";
 
-// export const urlServer = "http://localhost:5000";
-// export const tamzirtapozServer = "http://localhost:3000";
-const urlServer = "https://tamzirtapoz.herokuapp.com";
-const tamzirtapozServer = "https://tamzirtapoz.netlify.app";
+const development = false; // true for implementation false for deploy
+
+let urlServerState, tamzirtapozServerState;
+if (development) {
+  urlServerState = "http://localhost:5000";
+  tamzirtapozServerState = "http://localhost:3000";
+} else {
+  urlServerState = "https://tamzirtapoz.herokuapp.com";
+  tamzirtapozServerState = "https://tamzirtapoz.netlify.app";
+}
+
+export const urlServer = urlServerState;
+export const tamzirtapozServer = tamzirtapozServerState;
 
 const initialSiteStore = {
   toggleSideBar: false,
@@ -22,6 +31,7 @@ const initialSiteStore = {
   token: "",
   username: "",
   admin: false,
+  helloToBackend: development,
   id: "",
   color: "",
   shopName: "",
