@@ -18,7 +18,7 @@ if (development) {
   urlServerState = "http://localhost:5000";
   tamzirtapozServerState = "http://localhost:3000";
 } else {
-  urlServerState = "https://tamzirtapoz.herokuapp.com";
+  urlServerState = "https://redterrex.herokuapp.com";
   tamzirtapozServerState = "https://tamzirtapoz.netlify.app";
 }
 
